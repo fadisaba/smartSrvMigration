@@ -1,0 +1,18 @@
+migrateCommune Ok
+migrateGroupeSite OK
+migrateSite OK
+migrateMedecin OK
+migrateMaterielType OK
+migrateMateriel OK
+migrateStudiesType OK
+migrateStudies OK
+migrateStudiesActe OK
+
+migrateCorrespondant OK
+
+migrateCityIdForCorrespondant OK
+migratePatient   OK
+
+migrateCorrespondantIdForPatient OK
+
+migrateDossiers OK 2018 à 2015

@@ -1,0 +1,50 @@
+{
+  "development": {
+    "username": "postgres",
+    "password": "1181979",
+    "database": "smartmedma",
+    "host": "localhost",
+    "port":5432,
+    "dialect": "postgres"
+  },
+  "migrate": {
+    "username": "root",
+    "password": "",
+    "database": "smartmedmigrate",
+    "host": "localhost",
+    "port":3306,
+    "dialect": "mysql"
+  },
+  "medris": {
+    "username": "root",
+    "password": "",
+    "database": "medrisboud",
+    "host": "localhost",
+
+    "dialect": "mysql"
+  },
+  "sir5": {
+    "username": "sa",
+    "password": "1181979Fa",
+    "database": "sirdata2",
+    "host": "localhost",
+
+    "dialect": "mssql"
+  },
+  "radio3000": {
+    "username": "postgres",
+    "password": "1181979",
+    "database": "gambettaaccess",
+    "host": "localhost",
+    "port":5432,
+    "dialect": "postgres"
+  },
+  "production": {
+    "username": "postgres",
+    "password": "1181979Fa",
+    "database": "smartmed",
+    "host": "localhost",
+    "port":5432,
+    "dialect": "postgres"
+  }
+}
