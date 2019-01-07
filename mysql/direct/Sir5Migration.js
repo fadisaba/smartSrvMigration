@@ -239,6 +239,7 @@ let Sir5Migration = {
 
 
                                 patientModel.patientMigrationId=row.IDE_PATIENT;
+                                patientModel.patientPacsId=row.IDE_PATIENT;
                                 patientModel.patientFname=row.PRENOM ||'-';
                                 patientModel.patientLName=row.NOM ||'-';
                                 patientModel.patientMigrationField=row.IDE_MEDTRAITANT;

@@ -170,6 +170,14 @@ let Radio3000Migration = {
             })
     },
 
+    /**
+     * dans cette fonction il manque
+     * le studyActeCodeGroupement,studyActeAcceptedModificators
+     * On peut également utiliser la fonction "corrigerCodeGroupementApresMigration"
+     * il faut absolument le calculer sinon les codes Anp dans les cotations sont fausse
+     * @param params
+     * @param callback
+     */
     migrateStudiesActe: function (params, callback) {
         let dataToCreate=[];
         let promiseArray=[];
@@ -196,6 +204,7 @@ let Radio3000Migration = {
                             siteGroupeModel.studyActeCoefficient=1;
                             siteGroupeModel.studyActeMigrationId=i;
                             siteGroupeModel.active=true;
+                            // siteGroupeModel.studyActeCodeGroupement=
                             dataToCreate.push(siteGroupeModel);
                         });
                     }
@@ -213,6 +222,7 @@ let Radio3000Migration = {
                         siteGroupeModel.studyActeAdditionalAmount=0;
                         siteGroupeModel.studyActeCoefficient=1;
                         siteGroupeModel.studyActeMigrationId=i;
+                        // siteGroupeModel.studyActeCodeGroupement=
                         siteGroupeModel.active=true;
                         dataToCreate.push(siteGroupeModel);
                     }
