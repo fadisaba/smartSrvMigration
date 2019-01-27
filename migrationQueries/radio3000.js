@@ -208,3 +208,14 @@ Server.Radio3000Migration.migrateCrs({mind:0,maxd:3000,startDate:'2018-01-01',en
         }
     }
 );
+// migrate CRs files
+Server.Radio3000Migration.migrateCrFiles({},
+    function(res){
+        if(res.success){
+            console.log(res.data);
+        }
+        else{
+            console.error(res.msg);
+        }
+    }
+);
