@@ -3,6 +3,7 @@ let dbUtilityRadio3000=require('../common/DbUtilityRadio3000'); //TODO uncomment
 let dbUtility=require('../common/DbUtility');
 let moment = require('../node_modules/moment');
 let uuid = require('node-uuid');
+
 let Radio3000Migration = {
     fileContent:"",
     migrateRadiologue: function (params, callback) {
@@ -921,6 +922,76 @@ let Radio3000Migration = {
                     Radio3000Migration.fileContent+=visitMigrationId +' visitId has not report found \r\n';
                     return false;
                 }
+            })
+    },
+    migrateCrFiles:function(params,callback)
+    {
+        callback(null, {
+            data: "save Examen was successful",
+            success: true,
+            msg: ''
+
+        });
+         dbUtility.read({limit:'no'},'REPORT')
+            .then(_reportArray=>{
+                _reportArray.forEach(_reportObj=>{
+                    let reportPath=_reportObj.reportPath;
+                    reportPath=reportPath.replace('.htm','.D00');
+					console.log(reportPath);
+                    let fs = require('fs');
+                    let reportPath1=reportPath.replace('.D00','.doc');
+                    fs.rename(reportPath, reportPath1, function(err) {
+                        if ( err ) console.log('ERROR: ' + err);
+                    });
+                })
+
+            })
+    },
+	migrateCrFiles2:function(params,callback)
+    {
+        callback(null, {
+            data: "save Examen was successful",
+            success: true,
+            msg: ''
+
+        });
+         dbUtility.read({limit:'no'},'REPORT')
+            .then(_reportArray=>{
+                _reportArray.forEach(_reportObj=>{
+					let arr=_reportObj.reportPath.split('/');
+					fs.mkdir(arr[2], { recursive: true }, (err) => {
+				if (err) throw err;
+				});
+					
+                })
+
+            })
+    },
+	 migrateCrFiles3:function(params,callback)
+    {
+        callback(null, {
+            data: "save cr was successful",
+            success: true,
+            msg: ''
+
+        });
+         dbUtility.read({limit:'no'},'REPORT')
+            .then(_reportArray=>{
+                _reportArray.forEach(_reportObj=>{
+					
+
+                    let reportPath=_reportObj.reportPath;
+                   reportPath=reportPath.replace('.htm','.doc');
+				
+                    let fs = require('fs');
+                    let dest=reportPath.replace('cr','crnew');
+					
+                     fs.rename(reportPath, dest, (err)=>{
+						if(err) throw err;
+						else console.log('Successfully moved');
+					  });
+                })
+
             })
     }
 };
