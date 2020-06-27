@@ -7,7 +7,7 @@ let moment = require('../node_modules/moment');
 let uuid = require('node-uuid');
 let MedRisMigration = {
     fileContent:"",
-    migrateCommune: function (params, callback) {
+    migrateCommune: function () {
         let dataToCreate=[];
         let filtersArray=[{name:"DEL",value:0}];
         dbUtilityMedris.read({limit:"no",filters:filtersArray},'VILLE_CP','')
@@ -27,24 +27,14 @@ let MedRisMigration = {
                 });
                 return dbUtility.insertRecords(dataToCreate,"CITY",false)
                     .then(function (insertId) {
-                        callback(null, {
-                            data: "save COMMUNE  was successful",
-                            success: true,
-                            msg: ''
-                        });
+                     console.log('save COMMUNE  was successful');
                     })
             })
             .catch(function (error) {
                 console.error("Error Sir5Migration.js => Function migrateCommune : " + error);
-                callback(null, {
-                    data: [],
-                    success: false,
-                    msg: 'Error'
-
-                });
             })
     },
-    migrateGroupeSite: function (params, callback) {
+    migrateGroupeSite: function () {
         let dataToCreate=[];
         let siteGroupeModel={};
         siteGroupeModel.siteGroupId=1;
@@ -56,25 +46,14 @@ let MedRisMigration = {
 
                dbUtility.insertRecords(dataToCreate,"SITE_GROUP",false)
                     .then(function (insertId) {
-                        callback(null, {
-                            data: "save site group was successful",
-                            success: true,
-                            msg: ''
-
-                        });
+                      console.log("save site group was successful");
                     })
 
             .catch(function (error) {
                 console.error("Error MedRisMigration.js => Function migrateSite : " + error);
-                callback(null, {
-                    data: [],
-                    success: false,
-                    msg: 'Error'
-
-                });
             })
     },
-    migrateSite: function (params, callback) {
+    migrateSite: function () {
 
         let dataToCreate=[];
         let dataConfigToCreate=[];
@@ -136,35 +115,19 @@ let MedRisMigration = {
 
                 return Promise.all([p1,p2])
                     .then(function (insertId) {
-                        callback(null, {
-                            data: "save site was successful",
-                            success: true,
-                            msg: ''
-
-                        });
+                       console.log('save site was successful');
                     })
             })
             .then(function (rows) {
                 // on regarde s'il y a des blob (Buffer) on les converti en string
-                callback(null, {
-                    data: rows,
-                    success: true,
-                    msg: ''
 
-                });
             })
             .catch(function (error) {
 
                 console.error("Error MedrisMigration.js => Function migrateSite : " + error);
-                callback(null, {
-                    data: [],
-                    success: false,
-                    msg: 'Error'
-
-                });
             })
     },
-    migrateMedecin: function (params, callback) {
+    migrateMedecin: function () {
         let dataToCreate=[];
         let dataUserToCreate=[];
         let filtersArray=[{name:"DEL",value:0}];
@@ -175,7 +138,6 @@ let MedRisMigration = {
                         let doctorModel={};
                         userModel.userId=row.idMedecin;
                         doctorModel.userId=row.idMedecin;
-                        //userModel.cityId=row['Adresse.Commune.IDE_COMMUNE'];
                         userModel.userCatId=3;
                         userModel.userFName=row.prenomMedecin;
                         userModel.userLName=row.nomMedecin;
@@ -203,24 +165,14 @@ let MedRisMigration = {
                         return p2;
                     })
                     .then(function (insertId) {
-                        callback(null, {
-                            data: "save Medecins  was successful",
-                            success: true,
-                            msg: ''
-                        });
+                        console.log('doctor saved succesfully')
                     })
             })
             .catch(function (error) {
                 console.error("Error MedRisMigration.js => Function migrateMedecin : " + error);
-                callback(null, {
-                    data: [],
-                    success: false,
-                    msg: 'Error'
-
-                });
             })
     },
-    migrateMaterielType: function (params, callback) {
+    migrateMaterielType: function () {
         let dataToCreate=[];
         let filtersArray=[{name:"DEL",value:0}];
         dbUtilityMedris.read({limit:"no",filters:filtersArray}, "materiel_type")
@@ -236,25 +188,15 @@ let MedRisMigration = {
                 });
                 let p1=dbUtility.insertRecords(dataToCreate,"device_type",false);
                 p1.then(function (insertId) {
-                    callback(null, {
-                        data: "save device_type  was successful",
-                        success: true,
-                        msg: ''
-                    });
+                 console.log('save device_type  was successful');
                 })
             })
             .catch(function (error) {
                 console.error("Error MedRisMigration.js => Function migrateMaterielType : " + error);
-                callback(null, {
-                    data: [],
-                    success: false,
-                    msg: 'Error'
-
-                });
             })
     },
 
-    migrateMateriel: function (params, callback) {
+    migrateMateriel: function () {
         let dataToCreate=[];
        // let filtersArray=[{name:"DEL",value:0}];
         dbUtilityMedris.read({limit:"no"}, "materiel")
@@ -297,25 +239,15 @@ let MedRisMigration = {
                 });
                 let p1=dbUtility.insertRecords(dataToCreate,"device",false);
                 p1.then(function (insertId) {
-                    callback(null, {
-                        data: "save device  was successful",
-                        success: true,
-                        msg: ''
-                    });
+                 console.log('save device  was successful')
                 })
             })
             .catch(function (error) {
                 console.error("Error MedRisMigration.js => Function migrateMaterielType : " + error);
-                callback(null, {
-                    data: [],
-                    success: false,
-                    msg: 'Error'
-
-                });
             })
     },
 
-    migrateCorrespondant: function (params, callback) {
+    migrateCorrespondant: function () {
         let dataToCreate=[];
         let filtersArray=[{name:"DEL",value:0}];
         dbUtilityMedris.read({limit:"no",filters:filtersArray}, "correspondant")
@@ -358,25 +290,15 @@ let MedRisMigration = {
                 });
                 let p1=dbUtility.insertRecords(dataToCreate,"referring_physician",false);
                 p1.then(function (insertId) {
-                    callback(null, {
-                        data: "save Correspondant  was successful",
-                        success: true,
-                        msg: ''
-                    });
+                console.log('save Correspondant  was successful');
                 })
             })
             .catch(function (error) {
                 console.error("Error MedRisMigration.js => Function migrateCorrespondant : " + error);
-                callback(null, {
-                    data: [],
-                    success: false,
-                    msg: 'Error'
-
-                });
-            })
+            });
     },
 
-    migrateCityIdForCorrespondant: function (params, callback) {
+    migrateCityIdForCorrespondant: function () {
         let dataToCreate=[];
         let promiseArray=[];
         dbUtility.read({limit:"no"}, "city")
@@ -391,25 +313,14 @@ let MedRisMigration = {
                 });
                 let p1=Promise.all(promiseArray);
                 p1.then(function (insertId) {
-                    callback(null, {
-                        data: " migrateCityIdForCorrespondant  was successful",
-                        success: true,
-                        msg: ''
-                    });
+                 console.log('migrateCityIdForCorrespondant  was successful');
                 })
             })
             .catch(function (error) {
                 console.error("Error MedRisMigration.js => Function migrateCityIdForCorrespondant : " + error);
-                callback(null, {
-                    data: [],
-                    success: false,
-                    msg: 'Error'
-
-                });
             })
     },
-
-    migratePatientDelta: function (params, callback) {
+    migratePatientDelta: function () {
         let dataToCreate=[];
         let mainTable = {};
         mainTable.tableName = "PATIENT";
@@ -420,11 +331,6 @@ let MedRisMigration = {
                 rows.forEach(row=>{
                     dbUtility.read({filters:[{name:"patientMigrationId",value:row.IDE_PATIENT}]},"patient",smartMeDbName)
                         .then(_result=>{
-                            callback(null, {
-                                data: "save patient delta  was successful",
-                                success: true,
-                                msg: ''
-                            });
                             if(_result.length)
                             {
 
@@ -484,15 +390,9 @@ let MedRisMigration = {
             })
             .catch(function (error) {
                 console.error("Error Sir5Migration.js => Function migratePatientDelta : " + error);
-                callback(null, {
-                    data: [],
-                    success: false,
-                    msg: 'Error'
-
-                });
             })
     },
-    migratePatient: function (params, callback) {
+    migratePatient: function (_limit,_offset) {
         let dataToCreate=[];
         let mainTable = {};
         mainTable.tableName = "PATIENT";
@@ -501,7 +401,7 @@ let MedRisMigration = {
 
         let  joinArray= [{tableName: "coordonnee",required:false}];
 
-        dbUtilityMedris.joinQuery(mainTable, joinArray, params.limit,true,"",params.offset)
+        dbUtilityMedris.joinQuery(mainTable, joinArray, _limit,true,"",_offset)
             .then(function (rows) {
                 rows.forEach(row=>{
                     let patientModel={};
@@ -557,26 +457,15 @@ let MedRisMigration = {
                 });
                 return dbUtility.insertRecords(dataToCreate,"PATIENT",false)
                     .then(function (insertId) {
-                        callback(null, {
-                            data: "save patients  was successful",
-                            success: true,
-                            msg: ''
-                        });
+                        console.log('save patients  was successful');
                     })
             })
             .catch(function (error) {
                 console.error("Error Sir5Migration.js => Function migratePatient : " + error);
-                callback(null, {
-                    data: [],
-                    success: false,
-                    msg: 'Error'
-
-                });
             })
     },
 
-    migrateCorrespondantIdForPatient: function (params, callback) {
-        let dataToCreate=[];
+    migrateCorrespondantIdForPatient: function () {
         let promiseArray=[];
         dbUtility.read({limit:"no"}, "referring_physician")
             .then(function (rows) {
@@ -587,32 +476,18 @@ let MedRisMigration = {
                     userModel.referringPhysicianId=row.referringPhysicianId;
                     promiseArray.push(dbUtility.saveRecord(userModel,'patient'));
                 });
-                callback(null, {
-                    data: " migrateCorrespondantIdForPatient  was successful",
-                    success: true,
-                    msg: ''
-                });
+
                 let p1=Promise.all(promiseArray);
                 p1.then(function (insertId) {
-                    callback(null, {
-                        data: " migrateCorrespondantIdForPatient  was successful",
-                        success: true,
-                        msg: ''
-                    });
+                  console.log('migrateCorrespondantIdForPatient  was successful')
                 })
             })
             .catch(function (error) {
                 console.error("Error MedRisMigration.js => Function migrateCorrespondantIdForPatient : " + error);
-                callback(null, {
-                    data: [],
-                    success: false,
-                    msg: 'Error'
-
-                });
             })
     },
 
-    migrateStudiesType: function (params, callback) {
+    migrateStudiesType: function () {
         let dataToCreate=[];
         let filtersArray=[];
         dbUtilityMedris.read({limit:"no",filters:filtersArray},'examen_type')
@@ -639,25 +514,14 @@ let MedRisMigration = {
                 });
                 return dbUtility.insertRecords(dataToCreate,"STUDY_TYPE",false)
                     .then(function (insertId) {
-                        callback(null, {
-                            data: "save study type was successful",
-                            success: true,
-                            msg: ''
-
-                        });
+                      console.log('save study type was successful');
                     })
             })
             .catch(function (error) {
                 console.error("Error MedMigration.js => Function migrateStudiesType : " + error);
-                callback(null, {
-                    data: [],
-                    success: false,
-                    msg: 'Error'
-
-                });
             })
     },
-    migrateStudies: function (params, callback) {
+    migrateStudies: function () {
         let dataToCreate=[];
 
         dbUtilityMedris.read({limit:"no"},'EXAMEN','')
@@ -680,22 +544,11 @@ let MedRisMigration = {
                 });
                 return dbUtility.insertRecords(dataToCreate,"STUDY",false)
                     .then(function (insertId) {
-                        callback(null, {
-                            data: "save study was successful",
-                            success: true,
-                            msg: ''
-
-                        });
+                      console.log('save study was successful');
                     })
             })
             .catch(function (error) {
                 console.error("Error MedRisMigration.js => Function migrateStudies : " + error);
-                callback(null, {
-                    data: [],
-                    success: false,
-                    msg: 'Error'
-
-                });
             })
     },
     migrateStudiesActe: function (params, callback) {
@@ -1078,4 +931,4 @@ let MedRisMigration = {
             })
     }
 };
-module.exports = MedRisMigration;
+MedRisMigration.migratePatient()
