@@ -1,8 +1,8 @@
 {
   "development": {
     "username": "postgres",
-    "password": "1181979",
-    "database": "smartmedma",
+    "password": "ims062018",
+    "database": "charenton",
     "host": "localhost",
     "port":5432,
     "dialect": "postgres"
@@ -10,7 +10,7 @@
   "migrate": {
     "username": "root",
     "password": "",
-    "database": "smartmedmigrate",
+    "database": "charenton",
     "host": "localhost",
     "port":3306,
     "dialect": "mysql"
@@ -18,7 +18,7 @@
   "medris": {
     "username": "root",
     "password": "",
-    "database": "medrisboud",
+    "database": "charenton",
     "host": "localhost",
 
     "dialect": "mysql"

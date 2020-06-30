@@ -931,4 +931,7 @@ let MedRisMigration = {
             })
     }
 };
-MedRisMigration.migratePatient()
+//MedRisMigration.migratePatient(50000,55000);
+//MedRisMigration.migrateCorrespondant();
+//MedRisMigration.migrateCityIdForCorrespondant();
+MedRisMigration.migrateMedecin();
