@@ -106,10 +106,8 @@ module.exports = function(sequelize, DataTypes) {
             },boolUrgence: {
                 type: DataTypes.INTEGER,
                 allowNull: true
-            },boolMaternite: {
-                type: DataTypes.INTEGER,
-                allowNull: true
-            },forcerFinMaternite: {
+            },
+            forcerFinMaternite: {
                 type: DataTypes.INTEGER,
                 allowNull: true
             },
