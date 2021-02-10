@@ -596,342 +596,282 @@ let MedRisMigration = {
     },
 
 
-    migrateDossiers:function(params,callback)
+    migrateDossiers:async function(mind,maxd,startDate,endDate)
     {
         let promiseArray=[];
-        for (let i = params.mind; i < params.maxd; i++) {
-            params.offset=i;
-            promiseArray.push(MedRisMigration.migrateDossier(params));
+        for (let i = mind; i < maxd; i++) {
+            let  offset=i;
+            let result= await MedRisMigration.migrateDossier(startDate,endDate,offset);
         }
+        console.log('migration dossier du '+mind+ ' à '+maxd +'termine pour la durée'+startDate + 'à '+ endDate);
         let dt=new Date();
         let dtString=moment(dt).format("YYYYMMDD-h-mm-ss");
-        if(promiseArray.length)
-            Promise.all(promiseArray)
-                .then(function (insertId) {
-                    fs.writeFile('migration'+dtString+'.log', MedRisMigration.fileContent, (err) => {
-                        if (err) throw err;
-                        console.log('The file has been saved!');
-                        MedRisMigration.fileContent="";
-                    });
-                   /* callback(null, {
-                        data: "save visit  was successful",
-                        success: true,
-                        msg: ''
-                    });*/
-                }).catch(_err=>{
-                fs.writeFile('migration.log', _err, (err) => {
-                    if (err) throw err;
-                    console.log('The file has been saved!');
-                });
-                callback(null, {
-                    data: [],
-                    success: false,
-                    msg: 'Error'
 
-                });
-            });
-        callback(null, {
-            data: "save dossier was successful",
-            success: true,
-            msg: ''
-
+        fs.writeFile('migration'+dtString+'.log', MedRisMigration.fileContent, (err) => {
+            if (err) throw err;
+            console.log('The file has been saved!');
+            MedRisMigration.fileContent="";
         });
     },
-    migrateDossier: function (params) {
+    migrateDossier: async function (startDate,endDate,offset) {
         let dataToCreate=[];
         let rowDossier;
         let patientModel={};
         let filtersDossier=[];
-
         filtersDossier.push({
             name:'DEL',value:0
         });
+        filtersDossier.push({name:'dateDossier',value1:startDate,value2:endDate,compare:'between'});
 
-        filtersDossier.push({name:'dateDossier',value1:params.startDate,value2:params.endDate,compare:'between'});
+       let  rowsMedRIS= await  dbUtilityMedris.read({limit:1,offset:offset,filters:filtersDossier},'DOSSIER','');
 
-       return dbUtilityMedris.read({limit:1,offset:params.offset,filters:filtersDossier},'DOSSIER','')
-            .then(function (rows) {
-                    if (rows.length) {
-                        rowDossier = rows[0];
-                        let filters = [{name: 'patientMigrationId', value: ""+rowDossier.idPatient+""}];
+        if (rowsMedRIS.length) {
+            rowDossier = rowsMedRIS[0];
+            let filters = [{name: 'patientMigrationId', value: ""+rowDossier.idPatient+""}];
 
-                        return dbUtility.read({limit: 1, filters: filters,fieldsArray:['patientId']}, 'PATIENT')
-                    }
-                    else{
-                        fs.writeFile('migration.log','Dossier not found \n' , (err) => {
-                            if (err) throw err;
-                            console.log('The file has been saved!');
-                            return false;
-                        });
-                    }
-                }
-            )
-                .then(_patientResultsArray=>{
-                    if(_patientResultsArray && _patientResultsArray.length)
-                    {
-                        let patientObj=_patientResultsArray[0];
+            let _patientResultsArray= await dbUtility.read({limit: 1, filters: filters,fieldsArray:['patientId']}, 'PATIENT');
 
-                        patientModel.visitId=uuid.v4();
-                        patientModel.siteId=rowDossier.idSite;
-                        patientModel.patientId=patientObj.patientId;
-                        patientModel.remplacantId=null;
-                        patientModel.establishmentId=null;
-                        patientModel.visitInvoiceType=2;
-                        patientModel.doctorId=rowDossier.idMedecin;
-                        patientModel.visitDate=moment(new Date(rowDossier.dateDossier)).format('Y-M-D');
-                        patientModel.visitTime=rowDossier.heureDossier;
-                       if(rowDossier.arriveeDossier==="1" || rowDossier.arriveeDossier===1)
-                              patientModel.visitIsBySocialCard=true;
-                       else
-                           patientModel.visitIsBySocialCard=false;
+            if(_patientResultsArray && _patientResultsArray.length)
+            {
+                let patientObj=_patientResultsArray[0];
 
-                       if(rowDossier.boolGratuit)
-                            patientModel.visitIsFree=true;
-                       else
-                           patientModel.visitIsFree=false;
+                patientModel.visitId=uuid.v4();
+                patientModel.siteId=rowDossier.idSite;
+                patientModel.patientId=patientObj.patientId;
+                patientModel.remplacantId=null;
+                patientModel.establishmentId=null;
+                patientModel.visitInvoiceType=2;
+                patientModel.doctorId=rowDossier.idMedecin;
+                patientModel.visitDate=moment(new Date(rowDossier.dateDossier)).format('Y-M-D');
+                patientModel.visitTime=rowDossier.heureDossier;
+                if(rowDossier.arriveeDossier==="1" || rowDossier.arriveeDossier===1)
+                    patientModel.visitIsBySocialCard=true;
+                else
+                    patientModel.visitIsBySocialCard=false;
 
-                       patientModel.visitIsHospitalized=false;
-                        if(rowDossier.idEtablissementHospit)
-                            patientModel.visitIsHospitalized=true;
+                if(rowDossier.boolGratuit)
+                    patientModel.visitIsFree=true;
+                else
+                    patientModel.visitIsFree=false;
+
+                patientModel.visitIsHospitalized=false;
+                if(rowDossier.idEtablissementHospit)
+                    patientModel.visitIsHospitalized=true;
 
 
-                       if(rowDossier.boolUrgence)
-                        patientModel.visitIsUrgent=true;
-                       else
-                           patientModel.visitIsUrgent=false;
+                if(rowDossier.boolUrgence)
+                    patientModel.visitIsUrgent=true;
+                else
+                    patientModel.visitIsUrgent=false;
 
 
 
-                        patientModel.visitHospitVisitNumber=0;
-                        patientModel.visitIsDone=false;
-                        if(rowDossier.statutDossier==3)
-                            patientModel.visitIsDone=true;
+                patientModel.visitHospitVisitNumber=0;
+                patientModel.visitIsDone=false;
+                if(rowDossier.statutDossier==3)
+                    patientModel.visitIsDone=true;
 
-                        patientModel.visitMigrationId=rowDossier.idDossier;
+                patientModel.visitMigrationId=rowDossier.idDossier;
 
-                        patientModel.visitCotationStatus=rowDossier.statutCotation;
-                        patientModel.visitMigrationField1=rowDossier.idCorrespondantMT;
-                        patientModel.visitMigrationField2=rowDossier.idCorrespondant2;
+                patientModel.visitCotationStatus=rowDossier.statutCotation;
+                patientModel.visitMigrationField1=rowDossier.idCorrespondantMT;
+                patientModel.visitMigrationField2=rowDossier.idCorrespondant2;
 
-                        patientModel.visitIsAmo=false;
-                        if(rowDossier.TPAMO)
-                            patientModel.visitIsAmo=true;
+                patientModel.visitIsAmo=false;
+                if(rowDossier.TPAMO)
+                    patientModel.visitIsAmo=true;
 
-                        patientModel.visitIsAmc=false;
-                        if(rowDossier.TPAMC)
-                            patientModel.visitIsAmc=true;
+                patientModel.visitIsAmc=false;
+                if(rowDossier.TPAMC)
+                    patientModel.visitIsAmc=true;
 
-                        patientModel.active=true;
-
-
-                        dataToCreate.push(patientModel);
-                        return dbUtility.insertRecords(dataToCreate,"VISIT",false);
+                patientModel.active=true;
 
 
-                    }
-                    else{
-                        MedRisMigration.fileContent+=rowDossier.idPatient +' patient not found \r\n';
-                        return true;
-
-                    }
-                })
-           .then(_result=>{
+                dataToCreate.push(patientModel);
+                let visit=  await dbUtility.insertRecords(dataToCreate,"VISIT",false);
 
 
-               let worklistObj={};
-               worklistObj.worklistId=patientModel.visitId;
-               worklistObj.visitId=patientModel.visitId;
-               worklistObj.patientId=patientModel.patientId;
-               worklistObj.siteId=patientModel.siteId;
-               worklistObj.worklistDoctor=rowDossier.initialesMedecin;
-               if(rowDossier.statutCR>=4)
-                   worklistObj.worklistLastCrStatus=3;
-               else
-                   worklistObj.worklistLastCrStatus=2;
+                let regoObj = {};
+                regoObj.regoId = uuid.v4();
+                regoObj.visitId = patientModel.visitId;
+                regoObj.patientId = patientModel.patientId;
+                regoObj.regoCodeRegime = '1';
+                regoObj.regoCodeCaisse = '1';
+                regoObj.regoCodeCentre = '1';
 
-               dbUtility.insertRecords([worklistObj],"WORKLIST",false);
-           })
+
+                let rego = await  dbUtility.saveRecord(regoObj,"REGO",false);
+
+
+                let visitBalanceObj={};
+                visitBalanceObj.visitBalanceId=uuid.v4();
+                visitBalanceObj.visitId=patientModel.visitId;
+                let visitBalance= dbUtility.saveRecord(visitBalanceObj,"VISIT_BALANCE",false);
+
+
+                let worklistObj={};
+                worklistObj.worklistId=patientModel.visitId;
+                worklistObj.visitId=patientModel.visitId;
+                worklistObj.patientId=patientModel.patientId;
+                worklistObj.siteId=patientModel.siteId;
+                worklistObj.worklistDoctor=rowDossier.initialesMedecin;
+                if(rowDossier.statutCR>=4)
+                    worklistObj.worklistLastCrStatus=3;
+                else
+                    worklistObj.worklistLastCrStatus=2;
+
+                let worklist = dbUtility.insertRecords([worklistObj],"WORKLIST",false);
+
+                return worklist;
+            }
+            else{
+                MedRisMigration.fileContent+=rowDossier.idPatient +' patient not found in SMARTMED \r\n';
+                return true;
+
+            }
+        }
+        else {
+            fs.writeFile('migration.log', 'Dossier not found \n', (err) => {
+                if (err) throw err;
+                console.log('The file has been saved!');
+
+            })
+        }
     },
 
 
-    migrateExamen: function (params) {
+    migrateExamen: async function (mind,maxd,offset,startDate,endDate) {
         let dataToCreate=[];
         let visitId;
         let filtersDossier=[];
-        filtersDossier.push({name:'visitDate',value1:params.startDate,value2:params.endDate,compare:'between'});
-        return dbUtility.read({limit: 1,offset:params.offset,fieldsArray:['visitMigrationId','visitId'],filters:filtersDossier}, 'VISIT')
-            .then(_visitRowsArray=>{
-                if(_visitRowsArray.length)
+        filtersDossier.push({name:'visitDate',value1:startDate,value2:endDate,compare:'between'});
+        let _visitRowsArray=await dbUtility.read({limit: 1,offset:offset,fieldsArray:['visitMigrationId','visitId'],filters:filtersDossier}, 'VISIT')
+        if(_visitRowsArray.length)
+        {
+            let visitMigrationId=_visitRowsArray[0].visitMigrationId;
+            visitId=_visitRowsArray[0].visitId;
+            let filtersExamen=[{name:'idDossier',value:parseInt(visitMigrationId)},{name:'DEL',value:0}];
+
+            let mainTableObject={tableName:'dossier_examen',filters:filtersExamen};
+            let joinTablesArray=[];
+            joinTablesArray.push({tableName:'examen',fieldsArray:['codeExamen','designationExamen']});
+
+             let _rowsExamen= await dbUtilityMedris.joinQuery(mainTableObject,joinTablesArray,'no');
+            if(_rowsExamen)
+            {
+                if(_rowsExamen && _rowsExamen.length)
                 {
-                    let visitMigrationId=_visitRowsArray[0].visitMigrationId;
-                    visitId=_visitRowsArray[0].visitId;
-                    let filtersExamen=[{name:'idDossier',value:parseInt(visitMigrationId)},{name:'DEL',value:0}];
-                    /*return dbUtilityMedris.read({filters:filtersExamen},'dossier_examen','')*/
+                    let examenCode="";
+                    let i=0;
+                    _rowsExamen.forEach(_rowExamen=>{
+                        i++;
+                        examenCode+= _rowExamen['Examen.codeExamen'];
+                        if(i<_rowsExamen.length)
+                            examenCode+="|";
+                    }) ;
+                     let worklistParam={};
+                    worklistParam.idName='visitId';
+                    worklistParam.idValue=visitId;
+                    worklistParam.worklistStudies=examenCode;
+                   let saveWorklist= await dbUtility.saveRecord(worklistParam,'WORKLIST');
+                   return saveWorklist;
 
-                    let mainTableObject={tableName:'dossier_examen',filters:filtersExamen};
-                    let joinTablesArray=[];
-                    joinTablesArray.push({tableName:'examen',fieldsArray:['codeExamen','designationExamen']});
-
-                    return  dbUtilityMedris.joinQuery(mainTableObject,joinTablesArray,'no');
                 }
                 else return false;
+            }
+        }
+        else return false;
 
 
-            })
-            .then(_rowsExamen=>{
-                if(_rowsExamen)
-                {
-                    if(_rowsExamen && _rowsExamen.length)
-                    {
-                        let dataToInsertArray= [];
-                        let promiseArray=[];
-                        let examenCode="";
-                        let i=0;
-                        _rowsExamen.forEach(_rowExamen=>{
-                            i++;
-                            let studyVisitObj={};
-                            studyVisitObj.studyVisitId=uuid.v4();
-                            studyVisitObj.studyVisitMigrationId=_rowExamen.idDossierExamen;
-                            studyVisitObj.visitMigrationId=_rowExamen.idDossier;
-                            studyVisitObj.visitId=visitId;
-                            studyVisitObj.studyId=_rowExamen.idExamen;
-                            if(_rowExamen.idMateriel)
-                                studyVisitObj.deviceId=_rowExamen.idMateriel;
-                            else
-                                studyVisitObj.deviceId=1;
-
-                            studyVisitObj.userId=null;
-                            studyVisitObj.active=true;
-
-                            examenCode+= _rowExamen['Examen.codeExamen'];
-                            if(i<_rowsExamen.length)
-                                examenCode+="|";
-
-                            dataToInsertArray.push(studyVisitObj);
-
-
-                        }) ;
-                        promiseArray.push(dbUtility.insertRecords(dataToInsertArray,"STUDY_VISIT",false));
-                        let worklistParam={};
-                        worklistParam.idName='visitId';
-                        worklistParam.idValue=visitId;
-                        worklistParam.worklistStudies=examenCode;
-
-
-                        promiseArray.push( dbUtility.saveRecord(worklistParam,'WORKLIST'));
-                        return Promise.all(promiseArray);
-
-
-                    }
-                    else return false;
-                }
-
-
-            })
-            .catch(_err=>{
-                console.log(_err)
-            })
     },
-    migrateExamens: async function(params,callback)
+    migrateExamens: async function(mind,maxd,startDate,endDate)
     {
 
-
-        let promiseArray=[];
-        callback(null, {
-            data: "save Examen was successful",
-            success: true,
-            msg: ''
-
-        });
-        for (let i = params.mind; i < params.maxd; i++) {
-            params.offset=i;
-            await MedRisMigration.migrateExamen(params);
+        for (let i = mind; i < maxd; i++) {
+            let offset=i;
+            await MedRisMigration.migrateExamen(mind,maxd,offset,startDate,endDate);
         }
 
 
     },
 
-    migrateCrs: async function(params,callback)
+    migrateCrs: async function(mind,maxd,startDate,endDate)
     {
-        callback(null, {
-            data: "save C.R was successful",
-            success: true,
-            msg: ''
-
-        });
-        for (let i = params.mind; i < params.maxd; i++) {
-            params.offset=i;
-            await MedRisMigration.migrateCr(params);
+        for (let i = mind; i < maxd; i++) {
+            let offset=i;
+            await MedRisMigration.migrateCr(mind,maxd,offset,startDate,endDate);
         }
     },
-    migrateCr: function (params) {
+    migrateCr: async function (mind,maxd,offset,startDate,endDate) {
         let visitId;
         let visitMigrationId;
         let filtersDossier=[];
-        filtersDossier.push({name:'visitDate',value1:params.startDate,value2:params.endDate,compare:'between'});
+        filtersDossier.push({name:'visitDate',value1:startDate,value2:endDate,compare:'between'});
 
 
-        return dbUtility.read({
+        let _visitRowsArray= await dbUtility.read({
             limit: 1,
-            offset:params.offset,
-            fieldsArray:['visitMigrationId','visitId'],filters:filtersDossier}, 'VISIT')
-            .then(_visitRowsArray=>{
-                if(_visitRowsArray.length)
-                {
-                    visitMigrationId=_visitRowsArray[0].visitMigrationId;
-                    visitId=_visitRowsArray[0].visitId;
-                    let filtersExamen=[{name:'idDossier',value:visitMigrationId},{name:"DEL",value:0}];
+            offset:offset,
+            fieldsArray:['visitMigrationId','visitId'],filters:filtersDossier}, 'VISIT');
+        if(_visitRowsArray.length)
+        {
+            visitMigrationId=_visitRowsArray[0].visitMigrationId;
+            visitId=_visitRowsArray[0].visitId;
+            let filtersExamen=[{name:'idDossier',value:visitMigrationId},{name:"DEL",value:0}];
 
-                    return dbUtilityMedris.read({filters:filtersExamen},'dossier_compte_rendu','');
-                }
-                else
-                    return false;
+            let _rowsExamen= await dbUtilityMedris.read({filters:filtersExamen},'dossier_compte_rendu','');
 
-            })
-            .then(_rowsExamen=>{
-                if(_rowsExamen && _rowsExamen.length)
-                {
-                    let dataToInsertArray= [];
-                    _rowsExamen.forEach(function(_rowCr) {
-                        let reportObj={};
-                        reportObj.reportId=uuid.v4();
-                        reportObj.visitMigrationId=_rowCr.idDossier;
-                        reportObj.reportMigrationId=_rowCr.idDossierCR;
-                        reportObj.studyId=_rowCr.idExamen;
-                        reportObj.doctorId=1;
-                        reportObj.visitId=visitId;
-                        reportObj.reportName=_rowCr.libelleCR;
-                        let pathArray=(_rowCr.pathDocument).split("/");
-                        let docDossier=pathArray[1];
-                        let docName=pathArray[pathArray.length-1];
-                        docName=docName.replace('.rtf','.txt');
-                        //console.log(pathArray);
-                        reportObj.reportPath="migrated/"+docDossier+"/"+docName;
-                        reportObj.reportHtmlPath=reportObj.reportPath;
-                        reportObj.reportContentIsHtml=false;
-                        reportObj.reportDate=_rowCr.dateDossierCR;
-                        if(_rowCr.statutCR>=4)
-                            reportObj.reportStatus=5; // approved
-                        else if(_rowCr.statutCR==3)
-                            reportObj.reportStatus=7;//7- report  to review
-                        else{
-                            reportObj.reportStatus=2;// waiting for validation
-                        }
+            if(_rowsExamen && _rowsExamen.length)
+            {
+                let dataToInsertArray= [];
+                _rowsExamen.forEach(function(_rowCr) {
+                    let reportObj={};
+                    reportObj.reportId=uuid.v4();
+                    reportObj.visitMigrationId=_rowCr.idDossier;
+                    reportObj.reportMigrationId=_rowCr.idDossierCR;
+                    reportObj.studyId=_rowCr.idExamen;
+                    reportObj.doctorId=1;
+                    reportObj.visitId=visitId;
+                    reportObj.reportName=_rowCr.libelleCR;
+                    let pathArray=(_rowCr.pathDocument).split("/");
+                    let docDossier=pathArray[1];
+                    let docName=pathArray[pathArray.length-1];
+                    docName=docName.replace('.rtf','.htm');
+                    //console.log(pathArray);
+                    reportObj.reportPath="migrated/"+docDossier+"/"+docName;
+                    reportObj.reportHtmlPath=reportObj.reportPath;
+                    reportObj.reportContentIsHtml=false;
+                    reportObj.reportDate=_rowCr.dateDossierCR;
+                    if(_rowCr.statutCR>=4)
+                        reportObj.reportStatus=5; // approved
+                    else if(_rowCr.statutCR==3)
+                        reportObj.reportStatus=7;//7- report  to review
+                    else{
+                        reportObj.reportStatus=2;// waiting for validation
+                    }
 
-                        reportObj.active=true;
-                        dataToInsertArray.push(reportObj);
-                    });
+                    reportObj.active=true;
+                    dataToInsertArray.push(reportObj);
+                });
 
-                    return dbUtility.insertRecords(dataToInsertArray,"REPORT",false);
-                }
-                else{
-                    MedRisMigration.fileContent+=visitMigrationId +' visitId has not report found \r\n';
-                    return false;
-                }
-            })
+                let insertResult=  await dbUtility.insertRecords(dataToInsertArray,"REPORT",false);
+                return insertResult;
+            }
+            else{
+                MedRisMigration.fileContent+=visitMigrationId +' visitId has not report found \r\n';
+                return false;
+            }
+
+        }
+        else
+            return false;
     }
 };
 //MedRisMigration.migratePatient(50000,55000);
 //MedRisMigration.migrateCorrespondant();
 //MedRisMigration.migrateCityIdForCorrespondant();
-MedRisMigration.migrateMedecin();
+//MedRisMigration.migrateMedecin();
+//MedRisMigration.migrateDossiers(0,5,'2018-01-01','2018-12-31');
+//MedRisMigration.migrateExamens(0,500,'2018-01-01','2018-12-31');
+MedRisMigration.migrateCrs(0,200,'2018-01-01','2018-12-31');
