@@ -18,7 +18,7 @@
   "medris": {
     "username": "root",
     "password": "",
-    "database": "charenton",
+    "database": "medris1",
     "host": "localhost",
 
     "dialect": "mysql"
