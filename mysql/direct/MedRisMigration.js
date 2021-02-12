@@ -634,7 +634,6 @@ let MedRisMigration = {
             if(_patientResultsArray && _patientResultsArray.length)
             {
                 let patientObj=_patientResultsArray[0];
-
                 patientModel.visitId=uuid.v4();
                 patientModel.siteId=rowDossier.idSite;
                 patientModel.patientId=patientObj.patientId;
@@ -657,41 +656,28 @@ let MedRisMigration = {
                 patientModel.visitIsHospitalized=false;
                 if(rowDossier.idEtablissementHospit)
                     patientModel.visitIsHospitalized=true;
-
-
                 if(rowDossier.boolUrgence)
                     patientModel.visitIsUrgent=true;
                 else
                     patientModel.visitIsUrgent=false;
-
-
-
                 patientModel.visitHospitVisitNumber=0;
                 patientModel.visitIsDone=false;
                 if(rowDossier.statutDossier==3)
                     patientModel.visitIsDone=true;
 
                 patientModel.visitMigrationId=rowDossier.idDossier;
-
                 patientModel.visitCotationStatus=rowDossier.statutCotation;
                 patientModel.visitMigrationField1=rowDossier.idCorrespondantMT;
                 patientModel.visitMigrationField2=rowDossier.idCorrespondant2;
-
                 patientModel.visitIsAmo=false;
                 if(rowDossier.TPAMO)
                     patientModel.visitIsAmo=true;
-
                 patientModel.visitIsAmc=false;
                 if(rowDossier.TPAMC)
                     patientModel.visitIsAmc=true;
-
                 patientModel.active=true;
-
-
                 dataToCreate.push(patientModel);
                 let visit=  await dbUtility.insertRecords(dataToCreate,"VISIT",false);
-
-
                 let regoObj = {};
                 regoObj.regoId = uuid.v4();
                 regoObj.visitId = patientModel.visitId;
@@ -770,13 +756,17 @@ let MedRisMigration = {
                         if(i<_rowsExamen.length)
                             examenCode+="|";
                     }) ;
-                     let worklistParam={};
-                    worklistParam.idName='visitId';
-                    worklistParam.idValue=visitId;
-                    worklistParam.worklistStudies=examenCode;
-                   let saveWorklist= await dbUtility.saveRecord(worklistParam,'WORKLIST');
-                   return saveWorklist;
-
+                    let worklistParam = {};
+                    worklistParam.idName = 'visitId';
+                    worklistParam.idValue = visitId;
+                    worklistParam.worklistStudies = examenCode;
+                    let saveWorklist = await dbUtility.saveRecord(worklistParam, 'WORKLIST');
+                    let reportParam = {};
+                    reportParam.idName = 'visitId';
+                    reportParam.idValue = visitId;
+                    reportParam.reportName = examenCode;
+                    let saveReport = await dbUtility.saveRecord(reportParam, 'REPORT');
+                    return saveWorklist;
                 }
                 else return false;
             }
@@ -838,18 +828,13 @@ let MedRisMigration = {
                     let docDossier=pathArray[1];
                     let docName=pathArray[pathArray.length-1];
                     docName=docName.replace('.rtf','.htm');
-                    //console.log(pathArray);
+                    docName=docName.replace('.doc','.htm');
                     reportObj.reportPath="migrated/"+docDossier+"/"+docName;
                     reportObj.reportHtmlPath=reportObj.reportPath;
                     reportObj.reportContentIsHtml=false;
                     reportObj.reportDate=_rowCr.dateDossierCR;
-                    if(_rowCr.statutCR>=4)
-                        reportObj.reportStatus=5; // approved
-                    else if(_rowCr.statutCR==3)
-                        reportObj.reportStatus=7;//7- report  to review
-                    else{
-                        reportObj.reportStatus=2;// waiting for validation
-                    }
+                    if(_rowCr.statutCR>=1)
+                        reportObj.reportStatus=3; // valide
 
                     reportObj.active=true;
                     dataToInsertArray.push(reportObj);
@@ -872,6 +857,6 @@ let MedRisMigration = {
 //MedRisMigration.migrateCorrespondant();
 //MedRisMigration.migrateCityIdForCorrespondant();
 //MedRisMigration.migrateMedecin();
-//MedRisMigration.migrateDossiers(0,5,'2018-01-01','2018-12-31');
-//MedRisMigration.migrateExamens(0,500,'2018-01-01','2018-12-31');
-MedRisMigration.migrateCrs(0,200,'2018-01-01','2018-12-31');
+//MedRisMigration.migrateDossiers(0,8000,'2018-06-01','2018-06-30');
+//MedRisMigration.migrateCrs(0, 8000, '2018-06-01', '2018-06-30');
+//MedRisMigration.migrateExamens(0,8000,'2018-06-01','2018-06-30');
