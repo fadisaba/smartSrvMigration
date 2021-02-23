@@ -641,6 +641,7 @@ let MedRisMigration = {
                 patientModel.establishmentId=null;
                 patientModel.visitInvoiceType=2;
                 patientModel.doctorId=rowDossier.idMedecin;
+
                 patientModel.visitDate=moment(new Date(rowDossier.dateDossier)).format('Y-M-D');
                 patientModel.visitTime=rowDossier.heureDossier;
                 if(rowDossier.arriveeDossier==="1" || rowDossier.arriveeDossier===1)
@@ -737,39 +738,45 @@ let MedRisMigration = {
         {
             let visitMigrationId=_visitRowsArray[0].visitMigrationId;
             visitId=_visitRowsArray[0].visitId;
-            let filtersExamen=[{name:'idDossier',value:parseInt(visitMigrationId)},{name:'DEL',value:0}];
-
-            let mainTableObject={tableName:'dossier_examen',filters:filtersExamen};
-            let joinTablesArray=[];
-            joinTablesArray.push({tableName:'examen',fieldsArray:['codeExamen','designationExamen']});
-
-             let _rowsExamen= await dbUtilityMedris.joinQuery(mainTableObject,joinTablesArray,'no');
-            if(_rowsExamen)
+            console.log(visitMigrationId)
+            if(visitMigrationId)
             {
-                if(_rowsExamen && _rowsExamen.length)
+                let filtersExamen=[{name:'idDossier',value:parseInt(visitMigrationId)},{name:'DEL',value:0}];
+
+                let mainTableObject={tableName:'dossier_examen',filters:filtersExamen};
+                let joinTablesArray=[];
+                joinTablesArray.push({tableName:'examen',fieldsArray:['codeExamen','designationExamen']});
+
+                let _rowsExamen= await dbUtilityMedris.joinQuery(mainTableObject,joinTablesArray,'no');
+                if(_rowsExamen)
                 {
-                    let examenCode="";
-                    let i=0;
-                    _rowsExamen.forEach(_rowExamen=>{
-                        i++;
-                        examenCode+= _rowExamen['Examen.codeExamen'];
-                        if(i<_rowsExamen.length)
-                            examenCode+="|";
-                    }) ;
-                    let worklistParam = {};
-                    worklistParam.idName = 'visitId';
-                    worklistParam.idValue = visitId;
-                    worklistParam.worklistStudies = examenCode;
-                    let saveWorklist = await dbUtility.saveRecord(worklistParam, 'WORKLIST');
-                    let reportParam = {};
-                    reportParam.idName = 'visitId';
-                    reportParam.idValue = visitId;
-                    reportParam.reportName = examenCode;
-                    let saveReport = await dbUtility.saveRecord(reportParam, 'REPORT');
-                    return saveWorklist;
+                    if(_rowsExamen && _rowsExamen.length)
+                    {
+                        let examenCode="";
+                        let i=0;
+                        _rowsExamen.forEach(_rowExamen=>{
+                            i++;
+                            examenCode+= _rowExamen['Examen.codeExamen'];
+                            if(i<_rowsExamen.length)
+                                examenCode+="|";
+                        }) ;
+                        let worklistParam = {};
+                        worklistParam.idName = 'visitId';
+                        worklistParam.idValue = visitId;
+                        worklistParam.worklistStudies = examenCode;
+                        let saveWorklist = await dbUtility.saveRecord(worklistParam, 'WORKLIST');
+                        let reportParam = {};
+                        reportParam.idName = 'visitId';
+                        reportParam.idValue = visitId;
+                        reportParam.reportName = examenCode;
+                        let saveReport = await dbUtility.saveRecord(reportParam, 'REPORT');
+                        return saveWorklist;
+                    }
+                    else return false;
                 }
                 else return false;
             }
+
         }
         else return false;
 
@@ -851,12 +858,34 @@ let MedRisMigration = {
         }
         else
             return false;
+    },
+    deleteVisit: async function()
+    {
+        let filtersDossier=[];
+        filtersDossier.push({name:'visitDate',value1:"2015-01-01",value2:"2015-12-31",compare:'between'});
+
+
+        let visitRowsArray= await dbUtility.read({
+            limit: 15000,
+            fieldsArray:['visitMigrationId','visitId'],filters:filtersDossier}, 'VISIT');
+
+        for (let i = 0; i < visitRowsArray.length; i++) {
+
+             dbUtility.deleteRecordById('VISIT','visitId',visitRowsArray[i].visitId);
+             dbUtility.deleteRecordById('VISIT_BALANCE','visitId',visitRowsArray[i].visitId);
+             dbUtility.deleteRecordById('REGO','visitId',visitRowsArray[i].visitId);
+             dbUtility.deleteRecordById('WORKLIST','visitId',visitRowsArray[i].visitId);
+
+
+        }
     }
 };
 //MedRisMigration.migratePatient(50000,55000);
 //MedRisMigration.migrateCorrespondant();
 //MedRisMigration.migrateCityIdForCorrespondant();
 //MedRisMigration.migrateMedecin();
-//MedRisMigration.migrateDossiers(0,8000,'2018-06-01','2018-06-30');
-//MedRisMigration.migrateCrs(0, 8000, '2018-06-01', '2018-06-30');
-//MedRisMigration.migrateExamens(0,8000,'2018-06-01','2018-06-30');
+//
+//MedRisMigration.migrateDossiers(0,20000,'2015-01-01','2015-12-31');
+//MedRisMigration.migrateCrs(0, 20000,'2015-01-01','2015-12-31');
+MedRisMigration.migrateExamens(0,20000,'2015-01-01','2015-12-31');
+//MedRisMigration.deleteVisit();
