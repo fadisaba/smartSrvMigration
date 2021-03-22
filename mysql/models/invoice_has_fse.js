@@ -16,7 +16,7 @@ module.exports = function(sequelize, DataTypes) {
                 type: DataTypes.UUID,
                 allowNull: false
             },
-            invoiceHasFseStatus: {// le statut de la FSE ou du B2 (B2 pour les forfaits techniques) F pour  formaté, A: aquité, S pour envoyé, X :erreur
+            invoiceHasFseStatus: {// le statut de la FSE ou du B2 (B2 pour les forfaits techniques) F pour  facturé, A: aquité, S pour envoyé, X :erreur, SE : Securisé
                 type: DataTypes.STRING,
                 allowNull: true,
                 defaultValue:null
@@ -26,7 +26,7 @@ module.exports = function(sequelize, DataTypes) {
                 allowNull: true,
                 defaultValue:null
             },
-            invoiceHasFseMode: {// S:Sécurisé,DS:Désynchronisé,DG:Dégradé
+            invoiceHasFseMode: {// GS:Sécurisé,SE sécurisé unitairement,GD:Désynchronisé,GG:Dégradé, GI Non sécurisé (pour les FT B2)
                 type: DataTypes.STRING,
                 allowNull: false
             },

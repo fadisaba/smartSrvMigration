@@ -1,4 +1,4 @@
-"use strict";
+    "use strict";
 module.exports = function(sequelize, DataTypes) {
   var User = sequelize.define("User", {
         userId: {
@@ -28,6 +28,10 @@ module.exports = function(sequelize, DataTypes) {
           type: DataTypes.STRING,
           allowNull: true
         },
+          userHprimCode: {
+              type: DataTypes.STRING,
+              allowNull: true
+          },
         userPass: {
           type: DataTypes.STRING,
           allowNull: true
@@ -44,6 +48,10 @@ module.exports = function(sequelize, DataTypes) {
           type: DataTypes.STRING,
           allowNull: true
         },
+          userEmail: {
+              type: DataTypes.STRING,
+              allowNull: true
+          },
         userPhone: {
           type: DataTypes.STRING,
           allowNull: true
@@ -59,6 +67,16 @@ module.exports = function(sequelize, DataTypes) {
           userMigrationId: {
               type: DataTypes.STRING,
               allowNull: true
+          },
+          userIsVirtual: {
+              type: DataTypes.BOOLEAN,
+              allowNull: true,
+              defaultValue: false
+          },
+          userDescription: { // used for doctor
+              type: DataTypes.TEXT,
+              allowNull: true,
+              defaultValue: false
           },
         active: {
           type: DataTypes.BOOLEAN,
@@ -81,7 +99,10 @@ module.exports = function(sequelize, DataTypes) {
               User.hasMany(models.BankAccountConfig,{foreignKey: 'userId',constraints:false});
               User.hasMany(models.UserCps,{foreignKey: 'userId',constraints:false});
               User.hasMany(models.ConcurrentAccess,{foreignKey: 'userId'});
+              User.hasMany(models.ConcurrentFse,{foreignKey: 'userId'});
               User.hasMany(models.UserHasLog,{foreignKey: 'userId'});
+              User.hasMany(models.UserPlanningVac,{foreignKey: 'userId'});
+              User.hasMany(models.UserFilter,{foreignKey: 'userId'});
 
           }
         }

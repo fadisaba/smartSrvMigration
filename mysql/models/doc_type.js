@@ -11,6 +11,7 @@ module.exports = function (sequelize, DataTypes) {
                 type: DataTypes.STRING,
                 allowNull: false
             },
+
             docTypeRelatedTo: { // 2 patient,1 visit 3 other
                 type: DataTypes.INTEGER,
                 allowNull: false

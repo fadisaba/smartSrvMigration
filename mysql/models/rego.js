@@ -86,7 +86,7 @@ module.exports = function (sequelize, DataTypes) {
             allowNull: true,
             defaultValue:false
         },
-        regoAmeComp: {
+        regoAmeComp: { // ne existe plus
             type: DataTypes.BOOLEAN,
             allowNull: true,
             defaultValue:false
@@ -236,7 +236,10 @@ module.exports = function (sequelize, DataTypes) {
                 type: DataTypes.DATEONLY,
                 allowNull: true
             },
-
+            visitMigrationDate: {
+                type: DataTypes.DATE,
+                allowNull: true
+            },
             active: {
                 type: DataTypes.BOOLEAN,
                 allowNull: true,

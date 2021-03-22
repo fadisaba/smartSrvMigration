@@ -27,6 +27,19 @@ module.exports = function(sequelize, DataTypes) {
               type: DataTypes.STRING,
               allowNull: true
           },
+          roomPlRdvOrdre: {
+              type: DataTypes.INTEGER,
+              allowNull: true
+          },
+          roomCoutVacationRemplacant: {
+              type: DataTypes.INTEGER,
+              allowNull: true
+          },
+          roomPlMedecinOrdre: {
+              type: DataTypes.DECIMAL(10, 2),
+              allowNull: true,
+              defaultValue:0
+          },
         active: {
           type: DataTypes.BOOLEAN,
           allowNull: true,

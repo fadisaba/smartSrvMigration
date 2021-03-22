@@ -16,6 +16,10 @@ module.exports = function(sequelize, DataTypes) {
             type: DataTypes.INTEGER, // 1-FsCerfa,2-FTCerfa-3-FicheSuiveuse,4-etiquette,5-quittance, 6- bon examen, 7-certificat passage, 8 - note d'honoraire,9-Autre
             allowNull: true
           },
+        pdfTemplateNamePc: {// le nom du poste qui imprime
+            type: DataTypes.STRING,
+            allowNull: true
+        },
         pdfTemplateTables: {
             type: DataTypes.STRING,
             allowNull: true

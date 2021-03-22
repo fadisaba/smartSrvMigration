@@ -7,6 +7,10 @@ module.exports = function (sequelize, DataTypes) {
                 primaryKey: true,
                 autoIncrement: true
             },
+        studyCatId: {
+            type: DataTypes.INTEGER,
+            allowNull: false,
+        },
             studyTypeCode: {
                 type: DataTypes.STRING,
                 allowNull: true

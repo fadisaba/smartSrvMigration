@@ -36,7 +36,7 @@ module.exports = function(sequelize, DataTypes) {
                 this.setDataValue('patientFname', result.trim());
             }
         },
-        patientLName: {
+        patientLName: { // le nom d'usage du patient
           type: DataTypes.STRING,
           allowNull: true,
             set: function(val) {
@@ -44,6 +44,18 @@ module.exports = function(sequelize, DataTypes) {
 
             }
         },
+          patientCVLName: {
+              type: DataTypes.STRING,
+              allowNull: true
+          },
+          patientCVFName: {
+              type: DataTypes.STRING,
+              allowNull: true
+          },
+          patientCVBirthday: {
+              type: DataTypes.STRING,
+              allowNull: true
+          },
         patientGender: {
           type: DataTypes.INTEGER,
           allowNull: true
@@ -60,7 +72,7 @@ module.exports = function(sequelize, DataTypes) {
           type: DataTypes.DATEONLY,
           allowNull: true
         },
-          patientBirthName: {
+          patientSecondName: { // le nom de naissance
               type: DataTypes.STRING,
               allowNull: true
           },
@@ -80,7 +92,7 @@ module.exports = function(sequelize, DataTypes) {
           type: DataTypes.STRING,
           allowNull: true
         },
-        patientFaxNumber: {
+        patientFaxNumber: {// sera utilisé comme mot de passe pour la diffusion
           type: DataTypes.STRING,
           allowNull: true
         },
@@ -125,9 +137,39 @@ module.exports = function(sequelize, DataTypes) {
               type: DataTypes.STRING,
               allowNull: true
           },
+          patientAlert: {
+              type: DataTypes.STRING,
+              allowNull: true
+          },
+          patientLatestIpp: {
+              type: DataTypes.STRING,
+              allowNull: true
+          },
+          patientLatestSenderId: {
+              type: DataTypes.STRING,
+              allowNull: true
+          },
           patientMigrationField: {//used with migration to use temporary data
               type: DataTypes.STRING,
               allowNull: true
+          },
+          patientConsentementDiffusion:{
+              type: DataTypes.BOOLEAN,
+              defaultValue: false
+          },
+          patientPoids: {
+              type: DataTypes.DECIMAL(10, 2),
+              allowNull: true,
+              defaultValue:0
+          },
+          patientTaille: {
+              type: DataTypes.DECIMAL(10, 2),
+              allowNull: true,
+              defaultValue:0
+          },
+          patientIsNotVerified:{ // le patient n'est pas vérifié quand il prend rendez vous par internet la première fois et avant qu'il soit accueilli par la secrétaire
+              type: DataTypes.BOOLEAN,
+              defaultValue: false
           },
         active: {
           type: DataTypes.BOOLEAN,

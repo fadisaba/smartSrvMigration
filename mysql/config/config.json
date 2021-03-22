@@ -2,18 +2,18 @@
   "development": {
     "username": "postgres",
     "password": "ims062018",
-    "database": "charenton",
+    "database": "cimop",
     "host": "localhost",
     "port":5432,
     "dialect": "postgres"
   },
   "migrate": {
-    "username": "root",
-    "password": "",
-    "database": "charenton",
+    "username": "postgres",
+    "password": "ims062018",
+    "database": "cimop_migrate",
     "host": "localhost",
-    "port":3306,
-    "dialect": "mysql"
+    "port":5432,
+    "dialect": "postgres"
   },
   "medris": {
     "username": "root",

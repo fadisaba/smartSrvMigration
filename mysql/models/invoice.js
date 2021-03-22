@@ -22,7 +22,7 @@ module.exports = function (sequelize, DataTypes) {
                 type: DataTypes.DATEONLY,
                 allowNull: false
             },
-            invoiceAmountPatient: { // Without neither additionnal amount nor "Remise"
+            invoiceAmountPatient: { // inclut le dépassement mais pas la "Remise"
                 type: DataTypes.DECIMAL(10, 2),
                 allowNull: false,
                 defaultValue:0
@@ -83,6 +83,49 @@ module.exports = function (sequelize, DataTypes) {
             },
             invoiceRegcRate: {
                 type: DataTypes.INTEGER,
+                allowNull: true
+            },
+            invoiceIsDegrade: {
+                type: DataTypes.BOOLEAN,
+                defaultValue: false
+            },
+            invoiceFtYear: {
+                type: DataTypes.STRING,
+                allowNull: true
+            },
+            invoiceFt1Number: {
+                type: DataTypes.INTEGER,
+                allowNull: true
+            },
+            invoiceFt2Number: {
+                type: DataTypes.INTEGER,
+                allowNull: true
+            },
+            invoiceFt1Amount: {
+                type: DataTypes.DECIMAL(10, 2),
+                allowNull: true,
+                defaultValue:0
+            },
+            invoiceFt2Amount: {
+                type: DataTypes.DECIMAL(10, 2),
+                allowNull: true,
+                defaultValue:0
+            },
+            invoiceFtSeuil: {
+                type: DataTypes.INTEGER,
+                allowNull: true
+            },
+
+            invoiceFtDeviceId: {
+                type: DataTypes.INTEGER,
+                allowNull: true
+            },
+            invoiceDegradeIsPrinted: {
+                type: DataTypes.BOOLEAN,
+                defaultValue: false
+            },
+            siteId: {
+                type: DataTypes.BIGINT,
                 allowNull: true
             },
             active: {

@@ -21,6 +21,10 @@ module.exports = function(sequelize, DataTypes) {
           type: DataTypes.STRING,
           allowNull: true
         },
+          worklistStudiesType: {
+              type: DataTypes.STRING,
+              allowNull: true
+          },
           worklistStudiesIds: {
               type: DataTypes.STRING,
               allowNull: true
@@ -29,11 +33,11 @@ module.exports = function(sequelize, DataTypes) {
           type: DataTypes.STRING,
           allowNull: true
         },
-        worklistMedPresc: {
+        worklistMedPresc: { // traitant
           type: DataTypes.STRING,
           allowNull: true
         },
-        worklistMedRecipient: {
+        worklistMedRecipient: { // prescripteurs
           type: DataTypes.STRING,
           allowNull: true
         },
@@ -108,6 +112,10 @@ module.exports = function(sequelize, DataTypes) {
           type: DataTypes.STRING,
           allowNull: true
         },
+          visitMigrationDate: {
+              type: DataTypes.DATE,
+              allowNull: true
+          },
         active: {
           type: DataTypes.BOOLEAN,
           allowNull: true,

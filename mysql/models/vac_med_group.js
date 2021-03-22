@@ -7,10 +7,31 @@ module.exports = function(sequelize, DataTypes) {
           defaultValue: DataTypes.UUIDV4,
           primaryKey: true
       },
-
-          vacMedGroupLabel: { // la vacation de l'après midi
+          vacMedGroupLabel: {
               type: DataTypes.STRING,
               allowNull: true
+          },
+          vacMedGroupIsPlanningType: {// il s'agit d'un planning type
+              type: DataTypes.BOOLEAN,
+              allowNull: true,
+              defaultValue: true
+          },
+          vacMedGroupIsArchived: {// il s'agit d'un planning type archivé
+              type: DataTypes.BOOLEAN,
+              allowNull: true,
+              defaultValue: false
+          },
+          vacMedGroupWeeksNumber: { // le nombre de semaines concernées par le planning type
+              type: DataTypes.INTEGER,
+              allowNull: true
+          },
+          vacMedGroupMonthNumber: { // utilisé pour les plannings types
+              type: DataTypes.INTEGER,
+              allowNull: false
+          },
+          vacMedGroupYearNumber: {// utilisé pour les plannings types
+              type: DataTypes.INTEGER,
+              allowNull: false
           },
         active: {
           type: DataTypes.BOOLEAN,
@@ -25,6 +46,8 @@ module.exports = function(sequelize, DataTypes) {
           associate: function(models) {
 
               VacMedGroup.hasMany(models.VacMed,{foreignKey: 'vacMedGroupId'});
+              VacMedGroup.hasMany(models.VacmedgroupHasSite,{foreignKey: 'vacMedGroupId'});
+              VacMedGroup.hasMany(models.VacmedgroupPublish,{foreignKey: 'vacMedGroupId'});
 
           }
         }

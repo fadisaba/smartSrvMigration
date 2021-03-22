@@ -30,6 +30,10 @@ module.exports = function(sequelize, DataTypes) {
                 allowNull: true,
                 defaultValue: false
             },
+            studyVisitImagesAvailableCheckTime: {
+                type: DataTypes.DATE,
+                allowNull: true
+            },
             studyVisitPrice: {
                 type: DataTypes.DECIMAL(10,2),
                 allowNull: true,
@@ -52,7 +56,7 @@ module.exports = function(sequelize, DataTypes) {
                 type: DataTypes.STRING,
                 allowNull: true
             },
-            studyMigrationId: {
+			studyMigrationId: {
                 type: DataTypes.INTEGER,
                 allowNull: true
             },

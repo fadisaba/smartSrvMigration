@@ -7,6 +7,14 @@ module.exports = function(sequelize, DataTypes) {
           primaryKey: true,
           autoIncrement: true
         },
+          deviceUuid: {
+              type: DataTypes.UUID,
+              allowNull: true
+          },
+          pyxirisCounterId: {
+              type: DataTypes.UUID,
+              allowNull: true
+          },
           modalityId: {
               type: DataTypes.INTEGER,
               allowNull: false
@@ -19,6 +27,10 @@ module.exports = function(sequelize, DataTypes) {
          type: DataTypes.BIGINT,
           allowNull: false
         },
+          bankAccountId: {
+              type: DataTypes.UUID,
+              allowNull: true
+          },
         deviceName: {
           type: DataTypes.STRING,
           allowNull: true
@@ -64,10 +76,14 @@ module.exports = function(sequelize, DataTypes) {
               type: DataTypes.STRING,
               allowNull: true
           },
-        deviceLecture: {
-          type: DataTypes.BOOLEAN,
-          allowNull: true
-        },
+          deviceFtDerniereEpuration: {
+              type: DataTypes.DATE,
+              allowNull: true
+          },
+          deviceLecture: {
+              type: DataTypes.BOOLEAN,
+              allowNull: true
+          },
           deviceSupport: {
               type: DataTypes.INTEGER,
               allowNull: true,
@@ -77,7 +93,51 @@ module.exports = function(sequelize, DataTypes) {
               type: DataTypes.STRING,
               allowNull: true
           },
+          deviceGenerateFT: {
+              type: DataTypes.BOOLEAN,
+              allowNull: true
+          },
+          deviceFTNormalAmount: {//
+              type: DataTypes.DECIMAL(10, 2),
+              allowNull: true,
+              defaultValue:0
+          },
+          deviceFTSeuil1Amount: {//
+              type: DataTypes.DECIMAL(10, 2),
+              allowNull: true,
+              defaultValue:0
+          },
+          deviceFTSeuil2Amount: {//
+              type: DataTypes.DECIMAL(10, 2),
+              allowNull: true,
+              defaultValue:0
+          },
+          deviceFTSeuil3Amount: {//
+              type: DataTypes.DECIMAL(10, 2),
+              allowNull: true,
+              defaultValue:0
+          },
+          deviceFTSeuil1: {
+              type: DataTypes.INTEGER,
+              allowNull: true
+          },
+          deviceFTSeuil2: {
+              type: DataTypes.INTEGER,
+              allowNull: true
+          },
+          deviceFTSeuil3: {
+              type: DataTypes.INTEGER,
+              allowNull: true
+          },
+          deviceFT2Pourcent: { // le pourcentage de réduction pour calculer le deuxième forfait exemple :85
+              type: DataTypes.INTEGER,
+              allowNull: true
+          },
           deviceMigrationId: {
+              type: DataTypes.STRING,
+              allowNull: true
+          },
+          deviceMigrationId2: {
               type: DataTypes.STRING,
               allowNull: true
           },
@@ -102,6 +162,7 @@ module.exports = function(sequelize, DataTypes) {
               Device.belongsTo(models.Modality,{foreignKey: 'modalityId'});
               Device.belongsTo(models.Site,{foreignKey: 'siteId'});
               Device.belongsTo(models.DeviceType,{foreignKey: 'deviceTypeId'});
+              Device.hasMany(models.DeviceFtCounter,{foreignKey: 'deviceId'});
 
           }
         }

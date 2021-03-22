@@ -11,9 +11,13 @@ module.exports = function(sequelize, DataTypes) {
           allowNull: true
         },
        availCode: {
-          type: DataTypes.STRING,
-          allowNull: true
-        },
+              type: DataTypes.STRING,
+              allowNull: true
+          },
+          availColor: {
+              type: DataTypes.STRING,
+              allowNull: true
+          },
         active: {
           type: DataTypes.BOOLEAN,
           allowNull: true,

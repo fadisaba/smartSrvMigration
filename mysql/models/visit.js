@@ -27,9 +27,17 @@ module.exports = function (sequelize, DataTypes) {
                 allowNull: true
             },
             establishmentId: {
-            type: DataTypes.UUID,
-            allowNull: true
-        },
+                type: DataTypes.UUID,
+                allowNull: true
+            },
+            estHasServId: {
+                type: DataTypes.UUID,
+                allowNull: true
+            },
+            establishmentFtId: {
+                type: DataTypes.UUID,
+                allowNull: true
+            },
             visitDate: {
                 type: DataTypes.DATEONLY,
                 allowNull: false
@@ -37,6 +45,10 @@ module.exports = function (sequelize, DataTypes) {
             visitTime: {
                 type: DataTypes.TIME,
                 allowNull: false
+            },
+            visitRdvTime: {
+                type: DataTypes.STRING,
+                allowNull: true
             },
             visitIsBySocialCard: {
                 type: DataTypes.BOOLEAN,
@@ -58,16 +70,41 @@ module.exports = function (sequelize, DataTypes) {
                 allowNull: true,
                 defaultValue: false
             },
-            visitIsUrgent: {
+                visitIsUrgent: {
                 type: DataTypes.BOOLEAN,
                 allowNull: true,
                 defaultValue: false
             },
-            visitHospitVisitNumber: {
+                visitHospitAccountNumber: {///// le numéro du dossier administratif avec le hl7Pam
+                type: DataTypes.STRING,
+                allowNull: true
+            },
+            visitHospitUfHebergement: {
+                type: DataTypes.STRING,
+                allowNull: true
+            },
+            visitHospitUfResponsable: {
+                type: DataTypes.STRING,
+                allowNull: true
+            },
+            visitHospitVisitNumber: { // le numéro de séjour
+                type: DataTypes.STRING,
+                allowNull: true
+            },
+            visitChambre: {
+                type: DataTypes.STRING,
+                allowNull: true
+            },
+            visitLit: {
                 type: DataTypes.STRING,
                 allowNull: true
             },
             visitIsDone: {
+                type: DataTypes.BOOLEAN,
+                allowNull: true,
+                defaultValue: false
+            },
+            visitWithoutReport: {
                 type: DataTypes.BOOLEAN,
                 allowNull: true,
                 defaultValue: false
@@ -96,10 +133,14 @@ module.exports = function (sequelize, DataTypes) {
                 allowNull: true,
                 defaultValue: 0
             },
-            visitFtFor: {
+            visitFtFor: { // 0 AMO, 1 Patient, 2 Etablissement
                 type: DataTypes.INTEGER,
                 allowNull: true,
                 defaultValue: 0
+            },
+            visitFtsNumbers: { // numeros des fts séparés par un virgule
+                type: DataTypes.STRING,
+                allowNull: true
             },
             visitPacsId: {
                 type: DataTypes.STRING,
@@ -111,6 +152,10 @@ module.exports = function (sequelize, DataTypes) {
             },
             visitCotationStatus: {      /**  0 no quotation - 1 waiting    - 2 quotation saved  -3 quotation approved **/
                 type: DataTypes.INTEGER,
+                allowNull: true
+            },
+            visitCotationValidationDateTime: {
+                type: DataTypes.DATE,
                 allowNull: true
             },
             visitIppPatient: {
@@ -126,26 +171,19 @@ module.exports = function (sequelize, DataTypes) {
                 type: DataTypes.UUID,
                 allowNull: true
             },
+            visitTypeId: {
+                type: DataTypes.UUID,
+                allowNull: true
+            },
+            visitValiditePatientId: {
+                type: DataTypes.UUID,
+                allowNull: true
+            },
+
             visitImageAvailable: {
                 type: DataTypes.BOOLEAN,
                 allowNull: true,
                 defaultValue: false
-            },
-            visitNumeroFse: {
-                type: DataTypes.STRING,
-                allowNull: true
-            },
-            visitNumeroLotFse: {
-                type: DataTypes.STRING,
-                allowNull: true
-            },
-            visitNumeroDre: {
-                type: DataTypes.STRING,
-                allowNull: true
-            },
-            visitNumeroLotDre: {
-                type: DataTypes.STRING,
-                allowNull: true
             },
             visitMigrationField1: { // used only for datamigration
                 type: DataTypes.STRING,
@@ -173,6 +211,143 @@ module.exports = function (sequelize, DataTypes) {
                 type: DataTypes.DECIMAL(10, 2),
                 allowNull: false,
                 defaultValue:0
+            },
+            visitSuiviFacturationComment: {
+                type: DataTypes.STRING,
+                allowNull: true
+        },
+            visitRelanceAmoDate: {
+                type: DataTypes.DATEONLY,
+                allowNull: true
+            },
+            visitRelanceAmcDate: {
+                type: DataTypes.DATEONLY,
+                allowNull: true
+            },
+            visitRelanceEtabDate: {
+                type: DataTypes.DATEONLY,
+                allowNull: true
+            },
+            visitRelancePatientDates: {
+                type: DataTypes.STRING,
+                allowNull: true
+            },
+            visitDerniereRelancePatientDate: {
+                type: DataTypes.DATEONLY,
+                allowNull: true
+            },
+            visitRelancePatientNiveau: {
+                type: DataTypes.INTEGER,
+                allowNull: true
+            },
+            visitRelanceFtDate: {
+                type: DataTypes.DATEONLY,
+                allowNull: true
+            },
+            visitByDayNumber: {
+                type: DataTypes.INTEGER,
+                allowNull: true,
+                defaultValue: 0
+            },
+            visitIsDuplicated: {
+                type: DataTypes.BOOLEAN,
+                allowNull: true,
+                defaultValue: false
+            },
+            visitNumeroFacturation: {
+                type: DataTypes.STRING,
+                allowNull: true
+            },
+            visitInvoiceStandardNumber: {
+                type: DataTypes.STRING,
+                allowNull: true,
+                defaultValue: null
+            },
+            visitHprimFactNumber: {
+                type: DataTypes.STRING,
+                allowNull: true,
+                defaultValue: null
+            },
+            visitDateEnvoiHprim: {
+                type: DataTypes.DATE,
+                allowNull: true,
+                defaultValue: null
+            },
+            visitHprimFtNumber: {
+                type: DataTypes.STRING,
+                allowNull: true,
+                defaultValue: null
+            },
+            visitDateEnvoiHprimFt: {
+                type: DataTypes.DATE,
+                allowNull: true,
+                defaultValue: null
+            },
+            visitIsAdri: {
+                type: DataTypes.BOOLEAN,
+                allowNull: true,
+                defaultValue: false
+            },
+            visitIsBorne: {
+                type: DataTypes.BOOLEAN,
+                allowNull: true,
+                defaultValue: false
+            },
+            visitFtCodeRegime: {
+                type: DataTypes.STRING,
+                allowNull: true
+            },
+            visitFtCodeCaisse: {
+                type: DataTypes.STRING,
+                allowNull: true
+            },
+            visitFtCodeCentre: {
+                type: DataTypes.STRING,
+                allowNull: true
+            },
+            visitWithoutFt: {
+                type: DataTypes.BOOLEAN,
+                allowNull: true,
+                defaultValue: false
+            },
+            visitEstSortieDesUrgences: { // cette zone contiendra la date de sortie  des urgences recu par hl7 ou hprim
+                type: DataTypes.DATE,
+                allowNull: true
+            },
+            visitPoids: {
+                type: DataTypes.DECIMAL(10, 2),
+                allowNull: true,
+                defaultValue:0
+            },
+            visitTaille: {
+                type: DataTypes.DECIMAL(10, 2),
+                allowNull: true,
+                defaultValue:0
+            },
+            visitIsPreAccueil: {
+                type: DataTypes.BOOLEAN,
+                allowNull: true,
+                defaultValue: false
+            },
+            visitIsVacExt: {
+                type: DataTypes.BOOLEAN,
+                allowNull: true,
+                defaultValue: false
+            },
+            visitIsCancelled: {
+                type: DataTypes.BOOLEAN,
+                allowNull: true,
+                defaultValue: false
+            },
+            visitIsWithoutCR: { // n 'est pas utilisé
+                type: DataTypes.BOOLEAN,
+                allowNull: true,
+                defaultValue: false
+            },
+            visitFtIsInvalidite: {
+                type: DataTypes.BOOLEAN,
+                allowNull: true,
+                defaultValue: false
             },
             active: {
                 type: DataTypes.BOOLEAN,

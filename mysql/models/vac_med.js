@@ -7,13 +7,17 @@ module.exports = function(sequelize, DataTypes) {
               defaultValue: DataTypes.UUIDV4,
               primaryKey: true
         },
-          vacMedGroupId: {
+          vacMedGroupId: { // type de la vacation du matin
               type: DataTypes.UUID,
               allowNull: false
           },
-          vacMedSchId: {
+          vacMedTypeId: {
               type: DataTypes.UUID,
-              allowNull: false
+              allowNull: true
+          },
+          vacMedTypeAMId: { // type vacation après midi
+              type: DataTypes.UUID,
+              allowNull: true
           },
         roomId: {
           type: DataTypes.INTEGER,
@@ -37,6 +41,14 @@ module.exports = function(sequelize, DataTypes) {
           },
           vacMatUserId: {// la vacation du matin
               type: DataTypes.INTEGER,
+              allowNull: true
+          },
+          vacMatUpdateDate: {
+              type: DataTypes.DATEONLY,
+              allowNull: true
+          },
+          vacAMUpdateDate: {
+              type: DataTypes.DATEONLY,
               allowNull: true
           },
           vacAMUserId: { // la vacation de l'après midi
@@ -77,6 +89,39 @@ module.exports = function(sequelize, DataTypes) {
               type: DataTypes.STRING,
               allowNull: true
           },
+          vacMedIsGarde: {
+              type: DataTypes.BOOLEAN,
+              allowNull: true,
+              defaultValue: false
+          },
+          vacMedDoublonAutoriseMatin: {
+              type: DataTypes.BOOLEAN,
+              allowNull: true,
+              defaultValue: false
+          },
+          vacMedDoublonAutoriseAprem: {
+              type: DataTypes.BOOLEAN,
+              allowNull: true,
+              defaultValue: false
+          },
+          vacMedMatWaiting: {
+              type: DataTypes.BOOLEAN,
+              allowNull: true,
+              defaultValue: false
+          },
+          vacMedAMWaiting: {
+              type: DataTypes.BOOLEAN,
+              allowNull: true,
+              defaultValue: false
+          },
+          vacMatComment: {// la vacation du matin
+              type: DataTypes.STRING,
+              allowNull: true
+          },
+          vacAMComment: {// la vacation de l'apres midi
+              type: DataTypes.STRING,
+              allowNull: true
+          },
         active: {
           type: DataTypes.BOOLEAN,
           allowNull: true,
@@ -92,7 +137,7 @@ module.exports = function(sequelize, DataTypes) {
               VacMed.belongsTo(models.Room,{foreignKey: 'roomId'});
               VacMed.belongsTo(models.Site,{foreignKey: 'siteId'});
               VacMed.belongsTo(models.VacMedGroup,{foreignKey: 'vacMedGroupId'});
-              VacMed.belongsTo(models.VacMedSch,{foreignKey: 'vacMedSchId'});
+              VacMed.belongsTo(models.VacMedType,{foreignKey: 'vacMedTypeId', constraints: false});
           }
         }
       }

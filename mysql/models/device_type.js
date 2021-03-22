@@ -17,7 +17,7 @@ module.exports = function(sequelize, DataTypes) {
     },
       deviceTypeMigrationId: {
           type: DataTypes.STRING,
-          allowNull: false
+          allowNull: true
       },
     active: {
       type: DataTypes.BOOLEAN,

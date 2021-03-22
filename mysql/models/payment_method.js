@@ -6,7 +6,7 @@ module.exports = function (sequelize, DataTypes) {
                 allowNull: false,
                 primaryKey: true
             },
-            paymentMethodType: { // 1:cash 2: credit card 3:bank check 4:bank transfer
+            paymentMethodType: { // 1:cash 2: credit card 3:bank check 4:bank transfer, 5 pour Virement Noemie,6-Virement Noemie FT
                 type: DataTypes.INTEGER,
                 allowNull: false
             },

@@ -19,6 +19,11 @@ module.exports = function(sequelize, DataTypes) {
               type: DataTypes.INTEGER,
               allowNull: true
           },
+          reportTemplateHasStudyIsDefault: {// le template par défaut à afficher lors de l'ouverture du compte rendu
+              type: DataTypes.BOOLEAN,
+              allowNull: true,
+              defaultValue: false
+          },
       active: {
           type: DataTypes.BOOLEAN,
           allowNull: true,

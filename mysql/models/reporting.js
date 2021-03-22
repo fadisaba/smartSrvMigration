@@ -26,6 +26,10 @@ module.exports = function(sequelize, DataTypes) {
               type: DataTypes.STRING,
               allowNull: true
           },
+          reportingVisibleFields: {// les champs de recherche visible Exemple : studyId,studyTypeId,siteId,establishmentId
+              type: DataTypes.TEXT,
+              allowNull: true
+          },
               reportingIsHidden: {
               type: DataTypes.BOOLEAN,
               allowNull: true,

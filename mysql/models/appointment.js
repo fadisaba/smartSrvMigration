@@ -65,11 +65,24 @@ module.exports = function(sequelize, DataTypes) {
                 allowNull: true,
                 defaultValue: false
             },
+            appointmentIsByInternet: {
+                type: DataTypes.BOOLEAN,
+                allowNull: true,
+                defaultValue: false
+            },
+            appointmentIsSurbooking: {
+                type: DataTypes.BOOLEAN,
+                allowNull: true,
+                defaultValue: false
+            },
             appointmentComment: {
                 type: DataTypes.STRING,
                 allowNull: true
             },
-
+            establishmentId: {
+                type: DataTypes.UUID,
+                allowNull: true
+            },
             active: {
                 type: DataTypes.BOOLEAN,
                 allowNull: true,
@@ -82,6 +95,7 @@ module.exports = function(sequelize, DataTypes) {
             classMethods: {
                 associate: function(models) {
                     Appointment.belongsTo(models.User,{foreignKey: 'doctorId',constraints:false});
+                    Appointment.belongsTo(models.Establishment,{foreignKey: 'establishmentId',constraints:false});
                     Appointment.belongsTo(models.Patient,{foreignKey: 'patientId'});
                     Appointment.hasMany(models.AppDetail,{foreignKey: 'appointmentId'});
                     Appointment.hasMany(models.AppointmentHasRph,{foreignKey: 'appointmentId'});

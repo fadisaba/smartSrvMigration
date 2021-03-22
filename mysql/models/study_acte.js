@@ -10,6 +10,10 @@ module.exports = function(sequelize, DataTypes) {
           type: DataTypes.INTEGER,
           allowNull: false
         },
+          establishmentId: {
+            type: DataTypes.UUID,
+              allowNull: true
+          },
         studyActeCode: { // 1 CCAM ,2 ngap,3 hors nomenclature,
           type: DataTypes.STRING,
           allowNull: true
@@ -50,6 +54,11 @@ module.exports = function(sequelize, DataTypes) {
           allowNull: true,
           defaultValue: '0.00'
         },
+          studyActeAdditionalOptamAmount: {
+              type: DataTypes.DECIMAL(10, 2),
+              allowNull: true,
+              defaultValue: '0.00'
+          },
         studyActeAcceptedModificators: { // les modificateurs possibles pour l'acte
           type: DataTypes.STRING,
           allowNull: true
@@ -78,6 +87,14 @@ module.exports = function(sequelize, DataTypes) {
               allowNull: true
           },
           studyActeMigrationId: {
+              type: DataTypes.STRING,
+              allowNull: true
+          },
+          studyActeMigrationId2: {
+              type: DataTypes.STRING,
+              allowNull: true
+          },
+          studyActeMigrationId3: {
               type: DataTypes.STRING,
               allowNull: true
           },

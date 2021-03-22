@@ -4,6 +4,7 @@ module.exports = function(sequelize, DataTypes) {
         availHasStudyId: {
          type: DataTypes.UUID,
                 allowNull: false,
+            defaultValue: DataTypes.UUIDV4,
                 primaryKey: true
         },
         studyId: {

@@ -10,6 +10,10 @@ module.exports = function (sequelize, DataTypes) {
                 type: DataTypes.STRING,
                 allowNull: false
             },
+            amoAdressePostale: {// addresse postale utilisé pour l'envoi des documents
+                type: DataTypes.STRING,
+                allowNull: true
+            },
             amoCodeRegime: {
                 type: DataTypes.STRING,
                 allowNull: false

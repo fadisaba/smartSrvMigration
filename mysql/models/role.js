@@ -8,11 +8,11 @@ module.exports = function(sequelize, DataTypes) {
               primaryKey: true
         },
         roleCode: {
-              type: DataTypes.INTEGER,
+              type: DataTypes.STRING,
               allowNull: false
           },
           roleName: {
-              type: DataTypes.INTEGER,
+              type: DataTypes.STRING,
               allowNull: false
           },
       active: {

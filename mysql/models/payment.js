@@ -27,6 +27,10 @@ module.exports = function (sequelize, DataTypes) {
                 type: DataTypes.UUID,
                 allowNull: false
             },
+            bordRemiseId: {
+                type: DataTypes.UUID,
+                allowNull: true
+            },
             paymentDate: {
                 type: DataTypes.DATEONLY,
                 allowNull: true
@@ -45,7 +49,7 @@ module.exports = function (sequelize, DataTypes) {
                 allowNull: true,
                 defaultValue: false
             },
-            paymentIssuer: { // 1 patient , 2 rego , 3 regc, 4 establishment, 5 ft patient, 6 ft rego,7 ft establishment, 8 Noemie rego,9 Noemie regc,10 Noemi Rego et Regc,11 Noemie ft
+            paymentIssuer: { // 1 patient , 2 rego , 3 regc, 4 establishment, 5 ft patient, 6 ft rego,7 ft establishment, 8 Noemie rego,9 Noemie regc,10 Noemi Rego et Regc,11 Noemie ft,12 patient et patient FT, 13 etablissement et etablissement FT
                 type: DataTypes.INTEGER,
                 allowNull: false
             },
@@ -125,6 +129,7 @@ module.exports = function (sequelize, DataTypes) {
                     Payment.belongsTo(models.PaymentMethod, {foreignKey: 'paymentMethodId'});
                     Payment.belongsTo(models.Site, {foreignKey: 'siteId'});
                     Payment.belongsTo(models.CashBox, {foreignKey: 'cashBoxId',constraints: false});
+                    Payment.belongsTo(models.BordRemise, {foreignKey: 'bordRemiseId',constraints: false});
                     Payment.belongsTo(models.BankAccount, {foreignKey: 'bankAccountId'});
                     Payment.hasMany(models.InvoiceHasPayment, {foreignKey: 'paymentId'});
                     Payment.hasMany(models.RspHasPayment, {foreignKey: 'paymentId'});

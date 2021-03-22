@@ -30,7 +30,6 @@ module.exports = function (sequelize, DataTypes) {
                 allowNull: true,
                 set: function (val) {
                     this.setDataValue('referringPhysicianLName', val.toUpperCase());
-
                 }
             },
             referringPhysicianSearch: {
@@ -49,6 +48,10 @@ module.exports = function (sequelize, DataTypes) {
                 type: DataTypes.STRING,
                 allowNull: true
             },
+        referringPhysicianPolitesse: {
+            type: DataTypes.STRING,
+            allowNull: true
+        },
             referringPhysicianAddress: {
                 type: DataTypes.STRING,
                 allowNull: true
@@ -57,7 +60,7 @@ module.exports = function (sequelize, DataTypes) {
                 type: DataTypes.STRING,
                 allowNull: true
             },
-            referringPhysicianFaxNumber: {
+            referringPhysicianFaxNumber: {//utilisé comme password pour la diffusion
                 type: DataTypes.STRING,
                 allowNull: true
             },
@@ -77,6 +80,15 @@ module.exports = function (sequelize, DataTypes) {
             type: DataTypes.STRING,
             allowNull: true
         },
+        referringPhysicianMigrationVille: {
+            type: DataTypes.STRING,
+            allowNull: true
+        },
+        referringPhysicianHasAccessToDiffusion: {
+            type: DataTypes.BOOLEAN,
+            allowNull: true,
+            defaultValue: false
+        },
             active: {
                 type: DataTypes.BOOLEAN,
                 allowNull: true,
@@ -89,6 +101,7 @@ module.exports = function (sequelize, DataTypes) {
                 associate: function (models) {
                     ReferringPhysician.hasMany(models.Patient, {foreignKey: 'referringPhysicianId', constraints: false});
                     ReferringPhysician.hasMany(models.VisitHasRph, {foreignKey: 'referringPhysicianId'});
+                    ReferringPhysician.hasMany(models.DiffusionRefphLog, {foreignKey: 'referringPhysicianId'});
                     ReferringPhysician.belongsTo(models.City, {foreignKey: 'cityId', constraints: false});
                 }
             }

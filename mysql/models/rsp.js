@@ -7,6 +7,10 @@ module.exports = function (sequelize, DataTypes) {
                 defaultValue: DataTypes.UUIDV4,
                 primaryKey: true
             },
+            siteId: {
+                type: DataTypes.BIGINT,
+                allowNull: false
+            },
             rspFileName: {
                 type: DataTypes.STRING,
                 allowNull: false

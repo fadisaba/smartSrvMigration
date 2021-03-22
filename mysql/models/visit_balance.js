@@ -16,6 +16,11 @@ module.exports = function(sequelize, DataTypes) {
               allowNull: false,
               defaultValue:0
           },
+          visitBalanceAdditionalAmount: { // le montant de dépassement : sert pour les statistique
+              type: DataTypes.DECIMAL(10, 2),
+              allowNull: false,
+              defaultValue:0
+          },
           visitBalancePatientPaidAmount: {
               type: DataTypes.DECIMAL(10, 2),
               allowNull: false,
@@ -57,7 +62,7 @@ module.exports = function(sequelize, DataTypes) {
               allowNull: false,
               defaultValue:0
           },
-          visitBalanceRemiseAmount: { // juste pour information et ne doit pas rentré dans les calcul puisqu'il est déjà déduit du montant de la part patient
+          visitBalanceRemiseAmount: { // juste pour information et ne doit pas rentrer dans les calcul puisqu'il est déjà déduit du montant de la part patient
               type: DataTypes.DECIMAL(10, 2),
               allowNull: false,
               defaultValue:0
@@ -92,17 +97,17 @@ module.exports = function(sequelize, DataTypes) {
               allowNull: false,
               defaultValue:0
           },
-          visitBalanceEstablishmentFtAmount: {
+          visitBalanceEstablishmentFtAmount: {// n'est pas utilisé
               type: DataTypes.DECIMAL(10, 2),
               allowNull: false,
               defaultValue:0
           },
-          visitBalanceEstablishmentFtPaidAmount: {
+          visitBalanceEstablishmentFtPaidAmount: { // n'est pas utilisé
               type: DataTypes.DECIMAL(10, 2),
               allowNull: false,
               defaultValue:0
           },
-          visitBalanceEstablishmentFtLossAmount: {
+          visitBalanceEstablishmentFtLossAmount: {// n'est pas utilisé
               type: DataTypes.DECIMAL(10, 2),
               allowNull: false,
               defaultValue:0
@@ -111,6 +116,10 @@ module.exports = function(sequelize, DataTypes) {
               type: DataTypes.DECIMAL(10, 2),
               allowNull: false,
               defaultValue:0
+          },
+          visitMigrationDate: {
+              type: DataTypes.DATE,
+              allowNull: true
           },
         active: {
           type: DataTypes.BOOLEAN,

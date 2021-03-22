@@ -6,7 +6,6 @@ module.exports = function(sequelize, DataTypes) {
                 allowNull: false,
                 primaryKey: true,
                 defaultValue: DataTypes.UUIDV4
-
             },
             studyVisitId: {
                 type: DataTypes.UUID,
@@ -69,8 +68,6 @@ module.exports = function(sequelize, DataTypes) {
                 allowNull: false,
                 defaultValue: 0
             },
-
-
             studyVisitHasActeDepense: { // qualificatif de dépense
                 type: DataTypes.STRING,
                 allowNull: true
@@ -111,7 +108,7 @@ module.exports = function(sequelize, DataTypes) {
                 type: DataTypes.BOOLEAN,
                 defaultValue: false
             },
-            studyVisitHasActeIsComparatif: { // modificateur C a mettre
+            studyVisitHasActeIsComparatif: { // modificateur C a mettre, remplacé par le modificateur B pour bloc
                 type: DataTypes.BOOLEAN,
                 defaultValue: false
             },

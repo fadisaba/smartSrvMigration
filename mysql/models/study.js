@@ -48,6 +48,11 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: true,
       defaultValue: 0
     },
+          studyIsDosimetry: {
+              type: DataTypes.BOOLEAN,
+              allowNull: true,
+              defaultValue: false
+          },
     studyIsInjected: {
       type: DataTypes.BOOLEAN,
       allowNull: true,
@@ -73,12 +78,27 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: true,
       defaultValue: false
     },
+          studyIsForInternalRdv: { // pour les rdv pris depuis le RIS
+              type: DataTypes.BOOLEAN,
+              allowNull: true,
+              defaultValue: false
+          },
+          studyIsForExternalRdv: { // pour les rdv pris par internet
+              type: DataTypes.BOOLEAN,
+              allowNull: true,
+              defaultValue: false
+          },
           studyRequireDoctor: {
               type: DataTypes.BOOLEAN,
               allowNull: true,
               defaultValue: false
           },
           studyRequireTech: {
+              type: DataTypes.BOOLEAN,
+              allowNull: true,
+              defaultValue: false
+          },
+          studyIsEchoMam: {
               type: DataTypes.BOOLEAN,
               allowNull: true,
               defaultValue: false
@@ -90,6 +110,22 @@ module.exports = function(sequelize, DataTypes) {
           },
           studyMigrationId: {
               type: DataTypes.STRING,
+              allowNull: true
+          },
+          studyMigrationId2: {
+              type: DataTypes.STRING,
+              allowNull: true
+          },
+          studyChapitre: {
+              type: DataTypes.STRING,
+              allowNull: true
+          },
+          studyContraintesPatient: {
+              type: DataTypes.TEXT,
+              allowNull: true
+          },
+          studyContraintesExamen: {
+              type: DataTypes.TEXT,
               allowNull: true
           },
     active: {

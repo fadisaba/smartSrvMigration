@@ -22,12 +22,28 @@ module.exports = function(sequelize, DataTypes) {
               allowNull: true
           },
           patientHl7Date: {
-              type: DataTypes.DATE,
+              type: DataTypes.DATEONLY,
               allowNull: true
           },
-          patientHl7VisitNumber: {
+          patientHl7VisitNumber: { // le numéro de séjour
               type: DataTypes.STRING,
-              allowNull: false
+              allowNull: true
+          },
+          patientHl7AccountNumber: { // le numéro du dossier administratif avec le hl7Pam, peut regrouper plusieurs numero de séjour
+              type: DataTypes.STRING,
+              allowNull: true
+          },
+          patientHl7UfHebergement: {
+              type: DataTypes.STRING,
+              allowNull: true
+          },
+          patientHl7UfResponsable: {
+              type: DataTypes.STRING,
+              allowNull: true
+          },
+          patientHl7Lit: {
+              type: DataTypes.STRING,
+              allowNull: true
           },
           patientHl7IPP: {
               type: DataTypes.STRING,
@@ -51,7 +67,7 @@ module.exports = function(sequelize, DataTypes) {
                 this.setDataValue('patientHl7Fname', result.trim());
             }
         },
-        patientHl7LName: {
+        patientHl7LName: { // le nom de l'usage
           type: DataTypes.STRING,
           allowNull: true,
             set: function(val) {
@@ -70,7 +86,7 @@ module.exports = function(sequelize, DataTypes) {
           type: DataTypes.DATEONLY,
           allowNull: true
         },
-          patientHl7BirthName: {
+          patientHl7SecondName: { // le nom de naissance
               type: DataTypes.STRING,
               allowNull: true
           },
@@ -114,11 +130,79 @@ module.exports = function(sequelize, DataTypes) {
               type: DataTypes.STRING,
               allowNull: true
           },
-          patientHl7AdmissionStatus: { // Admission status in hprim  : OP sortie  IP entrée ER : entrée URGENCE
+          patientHl7AdmissionStatus: {
+            // pour le hprim :  Admission status   : OP sortie  IP entrée ER : entrée URGENCE
+              // pour le hl7PAm :  patientClass   :
+              // E Emergency Urgences
+              // I Inpatient Hospitalisé
+              // O Outpatient Externe : consultation de patient externe
+              // P Preadmit Préadmission
+              // R Recurring
+              // Patient
+              // Séance
+              // D Hospitalisation de jour
+              // M Hospitalisation de nuit
+              // W Hospitalisation de semaine
+              // S Psychiatrie
+              // K Nouveau né
+              // U Unknown Inconnu
               type: DataTypes.STRING,
               allowNull: true
           },
+          patientHl7DebutAmo: {
+              type: DataTypes.DATEONLY,
+              allowNull: true
+          },
+          patientHl7FinAmo: {
+              type: DataTypes.DATEONLY,
+              allowNull: true
+          },
 
+          patientHl7RangGem: {
+              type: DataTypes.STRING,
+              allowNull: true
+          },
+          patientHl7Regime: {
+              type: DataTypes.STRING,
+              allowNull: true
+          },
+          patientHl7Caisse: {
+              type: DataTypes.STRING,
+              allowNull: true
+          },
+          patientHl7Centre: {
+              type: DataTypes.STRING,
+              allowNull: true
+          },
+          patientHl7NatureAssurance: {
+              type: DataTypes.STRING,
+              allowNull: true
+          },
+          patientHl7NaturePieces: {
+              type: DataTypes.STRING,
+              allowNull: true
+          },
+          patientHl7CodeExoneration: {
+              type: DataTypes.STRING,
+              allowNull: true
+          },
+          patientHl7NomAssure: {
+              type: DataTypes.STRING,
+              allowNull: true
+          },
+          patientHl7PrenomAssure: {
+              type: DataTypes.STRING,
+              allowNull: true
+          },
+          patientHl7IsSortie: {// le patient est sortie de l'hopital
+              type: DataTypes.BOOLEAN,
+              allowNull: true,
+              defaultValue: false
+          },
+          patientHl7Chambre: { // chambre
+              type: DataTypes.STRING,
+              allowNull: true
+          },
         active: {
           type: DataTypes.BOOLEAN,
           allowNull: true,
@@ -130,7 +214,6 @@ module.exports = function(sequelize, DataTypes) {
         paranoid: true,
         classMethods: {
           associate: function(models) {
-               PatientHl7.hasOne(models.PatientHprim, {foreignKey: 'patientHl7Id', constraints: false});
               PatientHl7.belongsTo(models.Establishment, {foreignKey: 'establishmentId'});
           }
         }

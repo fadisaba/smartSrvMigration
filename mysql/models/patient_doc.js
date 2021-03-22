@@ -15,6 +15,10 @@ module.exports = function (sequelize, DataTypes) {
                 type: DataTypes.UUID,
                 allowNull: false
             },
+            appointmentId: {
+                type: DataTypes.UUID,
+                allowNull: true
+            },
             docTypeId: {
                 type: DataTypes.UUID,
                 allowNull: false
@@ -30,6 +34,10 @@ module.exports = function (sequelize, DataTypes) {
             patientDocDate: {
                 type: DataTypes.DATEONLY,
                 allowNull: false
+            },
+            patientDocOrder: {
+                type: DataTypes.INTEGER,
+                allowNull: true
             },
             active: {
                 type: DataTypes.BOOLEAN,

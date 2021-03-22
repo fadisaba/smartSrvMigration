@@ -47,9 +47,48 @@ module.exports = function(sequelize, DataTypes) {
           allowNull: true,
           defaultValue: 0
         },
+          siteColor: {
+              type: DataTypes.STRING,
+              allowNull: true
+          },
+          siteColorCalendar: {
+              type: DataTypes.STRING,
+              allowNull: true
+          },
+          siteIsGarde: {
+            type: DataTypes.BOOLEAN,
+              allowNull: true
+          },
+          siteNoControlDispo: {// on ne controle pas les dispo et indispo pour ce site, pas de point rouge sur le planning meme si le medecin est absent
+              type: DataTypes.BOOLEAN,
+              allowNull: true
+          },
           siteMigrationId: {
               type: DataTypes.STRING,
               allowNull: true
+          },
+          sitePlRdvOrdre: {
+              type: DataTypes.INTEGER,
+              allowNull: true
+          },
+          sitePlMedecinOrdre: {
+              type: DataTypes.INTEGER,
+              allowNull: true
+          },
+          siteIsScannOuIRM: { // true s'il s'agit d'un site de scanner ou d'IRM
+              type: DataTypes.BOOLEAN,
+              allowNull: true,
+              defaultValue: false
+          },
+          siteIsRDVInternet: {
+              type: DataTypes.BOOLEAN,
+              allowNull: true,
+              defaultValue: false
+          },
+          siteIsRDV: {
+              type: DataTypes.BOOLEAN,
+              allowNull: true,
+              defaultValue: false
           },
         active: {
           type: DataTypes.BOOLEAN,
@@ -76,6 +115,7 @@ module.exports = function(sequelize, DataTypes) {
               Site.hasMany(models.SiteUnavail,{foreignKey: 'siteId'});
               Site.hasMany(models.UserAvailbyday,{foreignKey: 'siteId'});
               Site.hasMany(models.RoomAvailbyday,{foreignKey: 'siteId'});
+              Site.hasMany(models.UserPlanningVac,{foreignKey: 'siteId'});
 
               Site.belongsTo(models.CashBoxConfig,{foreignKey: 'siteId',constraints:false});
               Site.belongsTo(models.BankAccountConfig,{foreignKey: 'siteId',constraints:false});
