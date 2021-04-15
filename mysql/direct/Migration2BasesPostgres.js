@@ -146,8 +146,8 @@ deleteExistingPatient:async function()
         await Migration.migrateVisit(_sqlStartDate, _sqlEndDate);
         await Migration.migrateWorklist(_sqlStartDate, _sqlEndDate);
         await Migration.migrateReport(_sqlStartDate, _sqlEndDate);
-       await Migration.migrateRego(_sqlStartDate, _sqlEndDate);
-        await Migration.migrateVisitBalance(_sqlStartDate, _sqlEndDate);
+      // await Migration.migrateRego(_sqlStartDate, _sqlEndDate);
+       // await Migration.migrateVisitBalance(_sqlStartDate, _sqlEndDate);
         console.log(": migration ALL successful");
 
     }
@@ -156,6 +156,4 @@ deleteExistingPatient:async function()
 
 //Migration.deleteExistingPatient();
 //Migration.migratePatient(); // 2
-//Migration.migrateAllTable('2018-10-01', '2018-12-31');// ok 2020 -2019 -2018
-//Migration.migrateWorklist('2020-02-01', '2020-02-28');
-//Migration.migrateReport('2020-02-01', '2020-01-28');
+Migration.migrateAllTable('2016-07-01', '2016-12-31');// ok 2020 -2019 -2018
