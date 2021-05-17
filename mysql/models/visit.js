@@ -362,6 +362,7 @@ module.exports = function (sequelize, DataTypes) {
                 associate: function (models) {
                     Visit.belongsTo(models.Patient, {foreignKey: 'patientId'});
                     Visit.belongsTo(models.Establishment, {foreignKey: 'establishmentId', constraints: false});
+                    Visit.belongsTo(models.Establishment, {foreignKey: 'establishmentFtId', as: 'establishmentFt' , constraints: false});
                     Visit.belongsTo(models.Doctor, {foreignKey: 'doctorId'});
                     Visit.belongsTo(models.Site, {foreignKey: 'siteId'});
                     Visit.hasMany(models.Report, {foreignKey: 'visitId'});

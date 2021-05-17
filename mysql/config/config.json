@@ -2,7 +2,7 @@
   "development": {
     "username": "postgres",
     "password": "ims062018",
-    "database": "cimop",
+    "database": "irmalfortville",
     "host": "localhost",
     "port":5432,
     "dialect": "postgres"
@@ -19,6 +19,14 @@
     "username": "root",
     "password": "",
     "database": "medris1",
+    "host": "localhost",
+
+    "dialect": "mysql"
+  },
+  "eris": {
+    "username": "root",
+    "password": "",
+    "database": "eris",
     "host": "localhost",
 
     "dialect": "mysql"

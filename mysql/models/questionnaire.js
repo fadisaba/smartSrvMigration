@@ -21,6 +21,11 @@ module.exports = function(sequelize, DataTypes) {
                 defaultValue: 1
 
             },
+            questionnaireAlwaysAsked: {
+                type: DataTypes.BOOLEAN,
+                allowNull: true,
+                defaultValue: false
+            },
             active: {
                 type: DataTypes.BOOLEAN,
                 allowNull: true,

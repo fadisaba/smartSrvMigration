@@ -2,7 +2,8 @@ let app = require('../server');
 let models = require("../models");
 //let modelsSir5 = require("../modelsSir5"); //TODO uncomment to do sir5 migration
 //let modelsMedris = require("../modelsMedris"); //TODO uncomment to do medris migration
-let modelsRadio3000 = require("../modelsRadio3000"); //TODO uncomment to do medris migration
+//let modelsRadio3000 = require("../modelsRadio3000"); //TODO uncomment to do radio3000 migration
+let modelsEris = require("../modelsEris"); //TODO uncomment to do Eris migration
 app.set('port', 8080);
 
 models.sequelize.sync().then(function () {
@@ -20,9 +21,14 @@ models.sequelize.sync().then(function () {
     console.log('medris DB was successfully  sync'); //TODO uncomment to do Medris migration
 });*/
 
-modelsRadio3000.sequelizeRadio3000.sync().then(function () {
-    console.log('Radio3000 DB was successfully  sync'); //TODO uncomment to do Medris migration
+/*modelsRadio3000.sequelizeRadio3000.sync().then(function () {
+    console.log('Radio3000 DB was successfully  sync'); //TODO uncomment to do Radio3000 migration
+});*/
+
+modelsEris.sequelizeEris.sync().then(function () {
+    console.log('Eris DB was successfully  sync'); //TODO uncomment to do Radio3000 migration
 });
+
 //"server":"smartmed.ddns.net", //"server":"localhost", à mettre dans le fichier direct-config
 
 //TODO add the folowing to the database after his creation to set the timezone

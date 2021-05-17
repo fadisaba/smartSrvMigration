@@ -18,6 +18,29 @@ module.exports = function(sequelize, DataTypes) {
                 defaultValue: 1
 
             },
+            studyQuestCate: {
+                type: DataTypes.INTEGER,// 1- oui/non, 2- oui/non/jsp, 3- date, 4- combo, 5- text
+                allowNull: false,
+                defaultValue: 1
+
+            },
+            studyQuestRequired: {
+                type: DataTypes.BOOLEAN,
+                allowNull: true,
+                defaultValue: false
+            },
+            studyQuestAge: {
+                type: DataTypes.INTEGER,
+                allowNull: true
+            },
+            studyQuestGender: {
+                type: DataTypes.INTEGER,
+                allowNull: true
+            },
+            studyQuestOrder: {
+                type: DataTypes.INTEGER,
+                allowNull: true
+            },
             active: {
                 type: DataTypes.BOOLEAN,
                 allowNull: true,
