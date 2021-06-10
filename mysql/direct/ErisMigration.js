@@ -88,7 +88,7 @@ let ErisMigration = {
         userModel.active=true;
         return userModel;
     },
-    migrateUserAndDoctor: async  function()
+    migrateUser: async  function()
     {
         let filtersArray=[{name:"obsolete",value:'0'}];
         let usersArray =await dbUtilityEris.read({limit:"no",filters:filtersArray}, "user");
@@ -96,7 +96,7 @@ let ErisMigration = {
             let userObj = usersArray[i];
             let userToSave=this.setUserModel(userObj);
             await dbUtility.saveRecord(userToSave,"user",false);
-            if(userObj.id_user_profil===4)// medecin
+           /* if(userObj.id_user_profil===4)// medecin
             {
 
                 let userPsArray =await dbUtilityEris.read({limit:"no",filters:[{name:'id_user',value:userObj.id_user,compare:'eq'}]}, "user_ps");
@@ -130,10 +130,13 @@ let ErisMigration = {
                     }
 
                 }
-            }
+            }*/
         }
     },
+    migratePS: async  function()
+    {
 
+    },
     migrateUnCorrespondant:async function(_obj,_rowsSpecialite)
     {
         let row = _obj;
