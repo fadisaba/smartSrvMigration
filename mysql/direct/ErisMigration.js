@@ -6,7 +6,7 @@ let dbUtility=require('../common/DbUtility');
 let moment = require('../node_modules/moment');
 let uuid = require('node-uuid');
 let ErisMigration = {
-    setDoctorModel:function(_rowUserPs,_rowUser)
+  /*  setDoctorModel:function(_rowUserPs,_rowUser)
     {
         let doctorModel={};
         doctorModel.doctorId=_rowUser.userId;
@@ -20,7 +20,7 @@ let ErisMigration = {
         doctorModel.doctorContratTarifaire=1;
         doctorModel.active=true;
         return doctorModel;
-    },
+    },*/
     setUserCpsModel:function(_rowUserPs,_rowUser)
     {
         let userCpsModel={};
@@ -88,6 +88,129 @@ let ErisMigration = {
         userModel.active=true;
         return userModel;
     },
+
+    setUserModelFromPS:function(row)
+    {
+        let userModel = {};
+        let userId = row.id_ps + 5000;
+        let userInitiales = (row.prenom).substring(0, 1) +""+  (row.nom).substring(0, 1);
+        userModel.userId = userId;
+        userModel.userCatId = 3;//médecin
+        userModel.userFName = row.prenom;
+        userModel.userLName = row.nom;
+        userModel.userInitiales = userInitiales;
+        userModel.userLogin = userInitiales;
+        userModel.userPass = userInitiales;
+        userModel.userMigrationId = row.id_ps;
+        userModel.active = true;
+        return userModel;
+
+
+        //user et doctor et user_cps (ps_situation)
+    },
+/*
+    setDoctorModelFromPS:function(row)
+    {
+        let userModel = {};
+        let userId = row.id_ps * 5000;
+        let userInitiales = (row.prenom).substring(0, 1) + " " + (row.nom).substring(0, 1);
+        userModel.userId = userId;
+        userModel.userCatId = 3;//médecin
+        userModel.userFName = row.prenom;
+        userModel.userLName = row.nom;
+        userModel.userInitiales = userInitiales;
+        userModel.userLogin = userInitiales;
+        userModel.userPass = userInitiales;
+        userModel.userMigrationId = userId;
+        userModel.active = true;
+        return userModel;
+
+
+        //user et doctor et user_cps (ps_situation)
+    },
+    setDoctorModelFromPSSituation:function(row)
+    {
+        let userModel = {};
+        let userId = row.id_ps * 5000;
+        let userInitiales = (row.prenom).substring(0, 1) + " " + (row.nom).substring(0, 1);
+        userModel.userId = userId;
+        userModel.userCatId = 3;//médecin
+        userModel.userFName = row.prenom;
+        userModel.userLName = row.nom;
+        userModel.userInitiales = userInitiales;
+        userModel.userLogin = userInitiales;
+        userModel.userPass = userInitiales;
+        userModel.userMigrationId = userId;
+        userModel.active = true;
+        return userModel;
+
+
+        //user et doctor et user_cps (ps_situation)
+    },*/
+
+    setDoctorModel:function(_rowPs,_rowUser)
+    {
+        let doctorModel={};
+        doctorModel.doctorId=_rowPs.id_ps;
+        doctorModel.userId=_rowUser.userId;
+        doctorModel.doctorIsSubstitute=false;
+        if(_rowPs.type_ps==="R")
+            doctorModel.doctorIsSubstitute=true;
+
+        doctorModel.doctorHasSector2=true;
+        doctorModel.doctorParametresAcs=1;
+        doctorModel.doctorContratTarifaire=1;
+        doctorModel.doctorMigrationId=_rowPs.id_ps;
+        doctorModel.active=true;
+        return doctorModel;
+    },
+    setUserCpsModelFromPS:function(_rowPs,_rowPsSituation,_rowUser)
+    {
+        let userCpsModel={};
+        userCpsModel.userCpsId=uuid.v4();
+        userCpsModel.userId=_rowUser.userId;
+        userCpsModel.siteId=1;
+        userCpsModel.userCpsCodePorteur="1234";
+        userCpsModel.userCpsAddedWihoutPyx=true;
+        userCpsModel.userCpsTeletransmissionAuto=false;
+        userCpsModel.userCpsType='0';
+        userCpsModel.userCpsAdeli=_rowPsSituation.num_nat;
+        userCpsModel.userCpsCle=(_rowPsSituation.num_nat).substring(8,9);
+        userCpsModel.userCpsNumero=(_rowPsSituation.num_nat).substring(0,8);
+        userCpsModel.userCpsNumeroSituation=_rowPsSituation.numero_situation;
+        userCpsModel.userCpsCivilite=_rowPsSituation.code_civilite;
+        userCpsModel.userCpsNom=_rowPs.nom;
+        userCpsModel.userCpsPrenom=_rowPs.prenom;
+        userCpsModel.userCpsModeExercice=_rowPsSituation.mode_exercice;
+        userCpsModel.userCpsSecteurActivite=_rowPsSituation.secteur_activite;
+        userCpsModel.userCpsTypeIdStructure=_rowPsSituation.type_identif_structure;
+        userCpsModel.userCpsNumeroIdStructure=_rowPsSituation.numero_identif_structure;
+        userCpsModel.userCpsCleIdStructure=_rowPsSituation.cle_identif_structure;
+        userCpsModel.userCpsRaisonSocialeStructure=_rowPsSituation.raison_sociale_structure;
+        userCpsModel.userCpsCodeSpecialite=_rowPsSituation.code_specialite;
+        userCpsModel.userCpsSpecialite='Electroradiologie';
+        userCpsModel.userCpsCodeConvention=_rowPsSituation.code_convention;
+        userCpsModel.userCpsConvention='Conventionné';
+        userCpsModel.userCpsZoneTarifaire='Zone A avec ID';
+        userCpsModel.userCpsCodeZoneTarifaire=_rowPsSituation.code_zone_tarifaire;
+        userCpsModel.userCpsZoneIk='Pas d\'indemnité kilométrique';
+        userCpsModel.userCpsCodeZoneIk=_rowPsSituation.code_zone_ik;
+        userCpsModel.userCpsAgrement='Agrément A';
+        userCpsModel.userCpsCodeAgrement=_rowPsSituation.code_agrement_1;
+        userCpsModel.userCpsCode2Agrement=_rowPsSituation.code_agrement_2;
+        userCpsModel.userCpsCode3Agrement=_rowPsSituation.code_agrement_3;
+        userCpsModel.userCpsHabilitationFact=_rowPsSituation.habilitation_facture;
+        userCpsModel.userCpsHabilitationLot=_rowPsSituation.habilitation_lot;
+        userCpsModel.active=true;
+        return userCpsModel;
+
+    },
+
+
+
+
+
+
     migrateUser: async  function()
     {
         let filtersArray=[{name:"obsolete",value:'0'}];
@@ -133,10 +256,34 @@ let ErisMigration = {
             }*/
         }
     },
-    migratePS: async  function()
-    {
 
+    migratePS: async function () {
+
+        let filtersArray = [{name: "obsolete", value: '0'}];
+        let psArray = await dbUtilityEris.read({limit: "no", filters: filtersArray}, "ps");
+        for (let i = 0; i < psArray.length; i++) {
+            let psObj = psArray[i];
+            let userToSave = this.setUserModelFromPS(psObj);
+            await dbUtility.saveRecord(userToSave, "user", false);
+            let doctorToSave = this.setDoctorModel(psObj, userToSave);
+            await dbUtility.saveRecord(doctorToSave, "doctor", false);
+           console.log(psObj.num_nat);
+            let psSituationArray = await dbUtilityEris.read({
+                limit: "no",
+                filters: [{name: 'num_nat', value: psObj.num_nat, compare: 'eq'}]
+            }, "ps_situation");
+
+
+
+            if (psSituationArray.length) {
+                for (let j = 0; j < psSituationArray.length; j++) {
+                    let userCpsToSave = this.setUserCpsModelFromPS(psObj, psSituationArray[j], userToSave);
+                    await dbUtility.saveRecord(userCpsToSave, "user_cps", false);
+                }
+            }
+        }
     },
+
     migrateUnCorrespondant:async function(_obj,_rowsSpecialite)
     {
         let row = _obj;
@@ -490,7 +637,7 @@ let ErisMigration = {
             })
     },
 
-    migrateDossier: async function (startDate,endDate) {
+    migrateDossier: async function (startDate,endDate,recuprerRego) {
         let dataToCreate=[];
         let rowDossier;
         let patientModel={};
@@ -498,8 +645,9 @@ let ErisMigration = {
         filtersDossier.push({name:'date_dossier',value1:startDate,value2:endDate,compare:'between'});
         filtersDossier.push({name:'annule',value:'0',compare:'eq'});
        let  rows= await  dbUtilityEris.read({limit:'no',filters:filtersDossier},'DOSSIER','');
-        if (rows.length) {
-            rowDossier = rows[0];
+        for (let i = 0; i < rows.length; i++) {
+            let  rowDossier = rows[i];
+
             let filters = [{name: 'patientMigrationId', value: ""+rowDossier.id_identite+""}];
 
             let _patientResultsArray= await dbUtility.read({limit: 1, filters: filters,fieldsArray:['patientId']}, 'PATIENT');
@@ -528,7 +676,7 @@ let ErisMigration = {
 
                 patientModel.visitMigrationId=rowDossier.id_dossier;
                 patientModel.visitPacsId=rowDossier.id_dossier;
-                patientModel.groupVacId=rowDossier.id_groupe_vacation;
+               // patientModel.groupVacId=rowDossier.id_groupe_vacation;
                 patientModel.visitCotationStatus=3;
                // patientModel.visitMigrationField1=rowDossier.idCorrespondantMT;
               //  patientModel.visitMigrationField2=rowDossier.idCorrespondant2;
@@ -565,9 +713,24 @@ let ErisMigration = {
                         worklistObj.worklistDoctor=rowsPs[0].nom+" "+ rowsPs[0].prenom;
                     }
                 }
-                worklistObj.worklistLastCrStatus=2;
+                worklistObj.worklistLastCrStatus=3;
 
-                let worklist = dbUtility.saveRecord(worklistObj,"WORKLIST",false);
+                let worklist = await dbUtility.saveRecord(worklistObj,"WORKLIST",false);
+
+                if(recuprerRego)
+                {
+                    let regoObj = {};
+                    regoObj.regoId = uuid.v4();
+                    regoObj.visitId = patientModel.visitId;
+                    regoObj.patientId = patientModel.patientId;
+                    regoObj.regoCodeRegime = '1';
+                    regoObj.regoCodeCaisse = '1';
+                    regoObj.regoCodeCentre = '1';
+
+
+                     await  dbUtility.saveRecord(regoObj,"REGO",false);
+
+                }
             }
         }
     },
@@ -583,7 +746,7 @@ let ErisMigration = {
         {
             let visitMigrationId=_visitRowsArray[0].visitMigrationId;
             visitId=_visitRowsArray[0].visitId;
-            console.log(visitMigrationId)
+         //   console.log(visitMigrationId)
             if(visitMigrationId)
             {
                 let filtersExamen=[{name:'idDossier',value:parseInt(visitMigrationId)},{name:'DEL',value:0}];
@@ -638,31 +801,25 @@ let ErisMigration = {
 
     },
 
-    migrateCrs: async function(mind,maxd,startDate,endDate)
-    {
-        for (let i = mind; i < maxd; i++) {
-            let offset=i;
-            await MedRisMigration.migrateCr(mind,maxd,offset,startDate,endDate);
-        }
-    },
-    migrateCr: async function (mind,maxd,offset,startDate,endDate) {
+    migrateCr: async function (startDate,endDate) {
         let visitId;
         let visitMigrationId;
         let filtersDossier=[];
         filtersDossier.push({name:'visitDate',value1:startDate,value2:endDate,compare:'between'});
 
 
-        let _visitRowsArray= await dbUtility.read({
-            limit: 1,
-            offset:offset,
-            fieldsArray:['visitMigrationId','visitId'],filters:filtersDossier}, 'VISIT');
-        if(_visitRowsArray.length)
-        {
-            visitMigrationId=_visitRowsArray[0].visitMigrationId;
-            visitId=_visitRowsArray[0].visitId;
-            let filtersExamen=[{name:'idDossier',value:visitMigrationId},{name:"DEL",value:0}];
+        let _visitRowsArray= await dbUtility.read({limit:'no',
+            fieldsArray:['visitMigrationId','visitId','doctorId'],filters:filtersDossier}, 'VISIT');
+        /*if(_visitRowsArray.length)
+        {*/
+            for (let i = 0; i < _visitRowsArray.length; i++) {
 
-            let _rowsExamen= await dbUtilityEris.read({filters:filtersExamen},'dossier_compte_rendu','');
+
+            visitMigrationId=_visitRowsArray[i].visitMigrationId;
+            visitId=_visitRowsArray[i].visitId;
+            let filtersExamen=[{name:'id_dossier',value:visitMigrationId,compare:'eq'},{name:'annule',value:0,compare:'eq'}];
+
+            let _rowsExamen= await dbUtilityEris.read({filters:filtersExamen},'compte_rendu','');
 
             if(_rowsExamen && _rowsExamen.length)
             {
@@ -670,39 +827,28 @@ let ErisMigration = {
                 _rowsExamen.forEach(function(_rowCr) {
                     let reportObj={};
                     reportObj.reportId=uuid.v4();
-                    reportObj.visitMigrationId=_rowCr.idDossier;
-                    reportObj.reportMigrationId=_rowCr.idDossierCR;
-                    reportObj.studyId=_rowCr.idExamen;
-                    reportObj.doctorId=1;
+                    reportObj.visitMigrationId=_rowCr.id_dossier;
+                    reportObj.reportMigrationId=_rowCr.id_compte_rendu;
+                    reportObj.studyId=0;
+                    reportObj.doctorId=_visitRowsArray[i].doctorId;
                     reportObj.visitId=visitId;
-                    reportObj.reportName=_rowCr.libelleCR;
-                    let pathArray=(_rowCr.pathDocument).split("/");
-                    let docDossier=pathArray[1];
-                    let docName=pathArray[pathArray.length-1];
-                    docName=docName.replace('.rtf','.htm');
-                    docName=docName.replace('.doc','.htm');
-                    reportObj.reportPath="migrated/"+docDossier+"/"+docName;
+                    reportObj.reportName=_rowCr.titre;
+                    reportObj.docName=_rowCr.id_compte_rendu+'.htm';
+                    reportObj.reportPath="migrated/"+_rowCr.lien+"/"+reportObj.docName;
                     reportObj.reportHtmlPath=reportObj.reportPath;
                     reportObj.reportContentIsHtml=false;
-                    reportObj.reportDate=_rowCr.dateDossierCR;
-                    if(_rowCr.statutCR>=1)
-                        reportObj.reportStatus=3; // valide
-
+                  //  _item.reportDate = moment(_item.reportDate).format('Y-MM-DD');
+                    reportObj.reportDate=_rowCr.dateheure;
+                    reportObj.reportStatus=3; // valide
                     reportObj.active=true;
                     dataToInsertArray.push(reportObj);
                 });
 
                 let insertResult=  await dbUtility.insertRecords(dataToInsertArray,"REPORT",false);
-                return insertResult;
-            }
-            else{
-                MedRisMigration.fileContent+=visitMigrationId +' visitId has not report found \r\n';
-                return false;
             }
 
+
         }
-        else
-            return false;
     },
     deleteVisit: async function()
     {
@@ -763,27 +909,44 @@ let ErisMigration = {
 
  /*ALTER TABLE `examen` ADD `createdAt` INT NULL DEFAULT NULL AFTER `obsolete`, ADD `updatedAt` INT NULL DEFAULT NULL AFTER `createdAt`;*/
  /*ALTER TABLE `examen_cotation` ADD `createdAt` INT NULL DEFAULT NULL AFTER `code_regroupe`, ADD `updatedAt` INT NULL DEFAULT NULL AFTER `createdAt`;*/
-/*ALTER TABLE `correspondant` ADD `createdAt` INT NULL DEFAULT NULL AFTER `prenom`, ADD `updatedAt` INT NULL DEFAULT NULL AFTER `createdAt`;*/
-/*ALTER TABLE `coordonnee` ADD `createdAt` INT NULL DEFAULT NULL AFTER `commentaire`, ADD `updatedAt` INT NULL DEFAULT NULL AFTER `createdAt`;*/
-/*ALTER TABLE `commune` ADD `createdAt` INT NULL DEFAULT NULL AFTER `ville`, ADD `updatedAt` INT NULL DEFAULT NULL AFTER `createdAt`;*/
-/*ALTER TABLE `specialite` ADD `createdAt` INT NULL DEFAULT NULL AFTER `code_specialite`, ADD `updatedAt` INT NULL DEFAULT NULL AFTER `createdAt`;*/
+
+
+
 /*ALTER TABLE `ident_adm` ADD `createdAt` INT NULL DEFAULT NULL AFTER `id_identite`, ADD `updatedAt` INT NULL DEFAULT NULL AFTER `createdAt`;*/
 /*ALTER TABLE `ident_pat` ADD `createdAt` INT NULL DEFAULT NULL AFTER `nir_cle`, ADD `updatedAt` INT NULL DEFAULT NULL AFTER `createdAt`;*/
 /*ALTER TABLE `identite` ADD `createdAt` INT NULL DEFAULT NULL AFTER `id_identite`, ADD `updatedAt` INT NULL DEFAULT NULL AFTER `createdAt`;*/
-/*ALTER TABLE `ps` ADD `createdAt` INT NULL DEFAULT NULL AFTER `obsolete`, ADD `updatedAt` INT NULL DEFAULT NULL AFTER `createdAt`;*/
 /*ALTER TABLE `dossier_affichage` ADD `createdAt` INT NULL DEFAULT NULL AFTER `examen`, ADD `updatedAt` INT NULL DEFAULT NULL AFTER `createdAt`;*/
 /*ALTER TABLE `dossier` ADD `createdAt` INT NULL DEFAULT NULL AFTER `annule`, ADD `updatedAt` INT NULL DEFAULT NULL AFTER `createdAt`;*/
-/*ALTER TABLE `user` ADD `createdAt` INT NULL DEFAULT NULL AFTER `obsolete`, ADD `updatedAt` INT NULL DEFAULT NULL AFTER `createdAt`;*/
-/*ALTER TABLE `user_ps` ADD `createdAt` INT NULL DEFAULT NULL AFTER `id_user`, ADD `updatedAt` INT NULL DEFAULT NULL AFTER `createdAt`;*/
 /*ALTER TABLE `orgadest_param_etebac` ADD `createdAt` INT NULL DEFAULT NULL AFTER `libelle`, ADD `updatedAt` INT NULL DEFAULT NULL AFTER `createdAt`;*/
 
+
+
+
+/*ALTER TABLE `specialite` ADD `createdAt` INT NULL DEFAULT NULL AFTER `code_specialite`, ADD `updatedAt` INT NULL DEFAULT NULL AFTER `createdAt`;*/
+/*ALTER TABLE `correspondant` ADD `createdAt` INT NULL DEFAULT NULL AFTER `prenom`, ADD `updatedAt` INT NULL DEFAULT NULL AFTER `createdAt`;*/
+/*ALTER TABLE `coordonnee` ADD `createdAt` INT NULL DEFAULT NULL AFTER `commentaire`, ADD `updatedAt` INT NULL DEFAULT NULL AFTER `createdAt`;*/
+/*ALTER TABLE `commune` ADD `createdAt` INT NULL DEFAULT NULL AFTER `ville`, ADD `updatedAt` INT NULL DEFAULT NULL AFTER `createdAt`;*/
+
+/*ALTER TABLE `user_ps` ADD `createdAt` INT NULL DEFAULT NULL AFTER `id_user`, ADD `updatedAt` INT NULL DEFAULT NULL AFTER `createdAt`;*/
+/*ALTER TABLE `user` ADD `createdAt` INT NULL DEFAULT NULL AFTER `obsolete`, ADD `updatedAt` INT NULL DEFAULT NULL AFTER `createdAt`;*/
+/*ALTER TABLE `ps_situation` ADD `createdAt` INT NULL DEFAULT NULL AFTER `type_carte`, ADD `updatedAt` INT NULL DEFAULT NULL AFTER `createdAt`;*/
+/*ALTER TABLE `ps` ADD `createdAt` INT NULL DEFAULT NULL AFTER `obsolete`, ADD `updatedAt` INT NULL DEFAULT NULL AFTER `createdAt`;*/
+
+/*ALTER TABLE `compte_rendu` ADD `createdAt` INT NULL DEFAULT NULL AFTER `annule`, ADD `updatedAt` INT NULL DEFAULT NULL AFTER `createdAt`;*/
 //MedRisMigration.migratePatient(50000,55000);
 
 
-//ErisMigration.migrateStudies();
+//ErisMigration.migratePS();
 //ErisMigration.migrateStudiesActe();
 //ErisMigration.migrateCorrespondant();
-//ErisMigration.migratePatient(50000,50000);
-//ErisMigration.migrateDossier('2021-01-01','2021-01-05');
+//ErisMigration.migratePatient(49999,1);
+
 //ErisMigration.migrateUserAndDoctor();
 //ErisMigration.migrateOrgEtbac();
+
+
+
+//ErisMigration.migrateDossier('2021-01-01','2021-06-10',true);
+
+//ErisMigration.migrateCr('2021-01-01','2021-06-10');
+
