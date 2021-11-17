@@ -2,7 +2,7 @@
   "development": {
     "username": "postgres",
     "password": "ims062018",
-    "database": "irmalfortville",
+    "database": "etampes",
     "host": "localhost",
     "port":5432,
     "dialect": "postgres"
@@ -27,6 +27,14 @@
     "username": "root",
     "password": "",
     "database": "eris",
+    "host": "localhost",
+
+    "dialect": "mysql"
+  },
+  "synapse": {
+    "username": "root",
+    "password": "",
+    "database": "synapse",
     "host": "localhost",
 
     "dialect": "mysql"
