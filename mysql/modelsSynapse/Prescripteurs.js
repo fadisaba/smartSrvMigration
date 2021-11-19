@@ -1,89 +1,73 @@
 "use strict";
 module.exports = function(sequelize, DataTypes) {
-    let Patient= sequelize.define("Patient", {
-            PATIENTID: {
+    let Prescripteurs= sequelize.define("Prescripteurs", {
+            PRESCRIPTEURID: {
                 type: DataTypes.STRING,
                 allowNull: false,
                 primaryKey: true
             },
-            PATIENTIDNUM: {
+            PRESCRIPTEURNOM: {
+                type: DataTypes.STRING,
+                allowNull: false,
+            },
+            PRESCRIPTEURPRENOM: {
+                type: DataTypes.STRING,
+                allowNull: false,
+            },
+            PRESCRIPTEURNOMPRENOM: {
+                type: DataTypes.STRING,
+                allowNull: true
+            },
+            PRESCRIPTEURSPECIALITES: {
+                type: DataTypes.STRING,
+                allowNull: true
+            },
+            PRESCRIPTEURADRESSE1: {
+                type: DataTypes.STRING,
+                allowNull: true
+            },
+            PRESCRIPTEURADRESSE2: {
+                type: DataTypes.STRING,
+                allowNull: true
+            },
+            PRESCRIPTEURCOMMUNECP: {
+                type: DataTypes.STRING,
+                allowNull: true
+            },
+            PRESCRIPTEURCOMMUNEID: {
                 type: DataTypes.INTEGER,
                 allowNull: true
             },
-            PATIENTPACSID: {
+            PRESCRIPTEURTEL: {
                 type: DataTypes.STRING,
                 allowNull: true
             },
-            PRESCRIPTEURID: {
+            PRESCRIPTEURFAX: {
                 type: DataTypes.STRING,
                 allowNull: true
             },
-            PATIENTINSC: {
-                type: DataTypes.STRING,
-                defaultValue: 0
-            },
-            PATIENTCIVILITE: {
-                type: DataTypes.STRING,
-                defaultValue: 0
-            },
-            PATIENTSEXE: {
-                type: DataTypes.STRING,
-                defaultValue: 0
-            },
-            PATIENTPRENOM: {
-                type: DataTypes.STRING,
-                defaultValue: 0
-            },
-            PATIENTNOM: {
+            PRESCRIPTEURPORTABLE: {
                 type: DataTypes.STRING,
                 allowNull: true
             },
-            PATIENTNOMJF: {
+            PRESCRIPTEUREMAIL: {
                 type: DataTypes.STRING,
                 allowNull: true
             },
-            PATIENTDATENAISSANCE: {
-                type: DataTypes.DATE,
-                allowNull: true
-            },
-            PATIENTNUMEROSECU: {
-                type: DataTypes.STRING,
-                allowNull: true
-            },
-            PATIENTCLENUMEROSECU: {
-                type: DataTypes.STRING,
-                allowNull: true
-            },
-            PATIENTADRESSE1: {
-                type: DataTypes.STRING,
-                allowNull: true
-            },
-            PATIENTCOMMUNECP: {
-                type: DataTypes.STRING,
-                allowNull: true
-            },
-            PATIENTTEL: {
-                type: DataTypes.STRING,
-                allowNull: true
-            },
-            PATIENTPORTABLE: {
-                type: DataTypes.STRING,
-                allowNull: true
-            },
-            PATIENTEMAIL: {
-                type: DataTypes.STRING,
-                allowNull: true
-            },
-            PATIENT_VIP: {
+            PRESCRIPTEURAPICRYPT: {
                 type: DataTypes.INTEGER,
                 allowNull: true
             },
-            PATIENT_TAILLE: {
-                type: DataTypes.DECIMAL(10, 2),
+            PRESCRIPTEUR_EST_FUSIONNE: {
+                type: DataTypes.INTEGER,
                 allowNull: true
             },
-            PATIENT_POIDS: {
-                type: DataTypes.DECIMAL(10, 2),
+            PRESCRIPTEUR_NUMERO: {
+                type: DataTypes.STRING,
+                allowNull: true
+            },
+            PRESCRIPTEUR_COMMENTAIRE: {
+                type: DataTypes.STRING,
                 allowNull: true
             },
             DELETED: {
@@ -92,7 +76,7 @@ module.exports = function(sequelize, DataTypes) {
             }
         },
         {
-            tableName: 'PATIENTS',
+            tableName: 'PRESCRIPTEURS',
             paranoid: false,
             classMethods: {
                 associate: function(modelsSynapse) {
@@ -100,5 +84,5 @@ module.exports = function(sequelize, DataTypes) {
             }
         }
     );
-    return Patient;
+    return Prescripteurs;
 };
