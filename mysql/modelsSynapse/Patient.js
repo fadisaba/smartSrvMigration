@@ -58,7 +58,17 @@ module.exports = function(sequelize, DataTypes) {
                 type: DataTypes.STRING,
                 allowNull: true
             },
+            PATIENTADRESSE2: {
+                type: DataTypes.STRING,
+                allowNull: true
+            },
+
+
             PATIENTCOMMUNECP: {
+                type: DataTypes.STRING,
+                allowNull: true
+            },
+            PATIENTCOMMUNEID: {
                 type: DataTypes.STRING,
                 allowNull: true
             },

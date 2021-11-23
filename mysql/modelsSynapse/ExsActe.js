@@ -50,9 +50,36 @@ module.exports = function(sequelize, DataTypes) {
                 type: DataTypes.INTEGER,
                 allowNull: false
             },
+            EXACTEMT: {
+                type: DataTypes.DECIMAL(10, 2),
+                allowNull: true
+            },
+            EXACTEMODIFICATEUR: {
+                type: DataTypes.STRING,
+                allowNull: true
+            },
+            EXACTEQUALIFDEP: {
+                type: DataTypes.STRING,
+                allowNull: true
+            },
+            EXACTESOUMISEP: {
+                type: DataTypes.INTEGER,
+                allowNull: false
+            },
+            EXACTEREMBOURSEMENT: {
+                type: DataTypes.STRING,
+                allowNull: false
+            },
+            EX_ACTE_EXT_DOC: {
+                type: DataTypes.STRING,
+                allowNull: false
 
+            },
+            EXACTEMODIFISPOSSIBLE: {
+                type: DataTypes.STRING,
+                allowNull: false
 
-
+            },
             DELETED: {
                 type: DataTypes.INTEGER,
                 allowNull: true

@@ -56,6 +56,7 @@ let SynapseMigration = {
             await dbUtility.insertRecords([userModel], "referring_physician", false);
 
     },
+
     migratePrescripteurs: async function () {
         let dataToCreate = [];
 
@@ -72,9 +73,9 @@ let SynapseMigration = {
 
         }
         console.log('save Correspondant  was successful');
-
-
     },
+
+
 
     migrateUnPatient: async function (_patientObj) {
         let row = _patientObj;
@@ -162,6 +163,7 @@ let SynapseMigration = {
         console.log('save patients  was successful');
     },
 
+
     migrateStudies: function () {
         let dataToCreate = [];
 
@@ -182,21 +184,6 @@ let SynapseMigration = {
                         siteGroupeModel.studyMultiSegment = row.EXAMEN_MULTI_SEG;
                         siteGroupeModel.studyIsSenolog = row.EXAMENESTSENOLOG;
                         siteGroupeModel.studyMigrationId = row.EXAMENID;
-                        /*  if(row.ps_obligatoire==='1')
-                              siteGroupeModel.studyRequireDoctor=true;
-                          else
-                              siteGroupeModel.studyRequireDoctor=false;
-
-                          if(row.mn_obligatoire==='1')
-                              siteGroupeModel.studyRequireTech=true;
-                          else
-                          siteGroupeModel.studyRequireTech=true;
-
-                          if(row.double_ft==='1')
-                              siteGroupeModel.studyFtNumber=2;
-                          else
-                              siteGroupeModel.studyFtNumber=1;*/
-
                         siteGroupeModel.studyFtNumber = row.EXAMENNBFT;
                         siteGroupeModel.studyGenerateDicomWl = (row.EXAMEN_GENERATE_WL || (row.EXAMENESTHORSNOM == 0));
 
@@ -235,16 +222,20 @@ let SynapseMigration = {
                         siteGroupeModel.studyActeType = 3;//Hors nom
 
                     }
-                    siteGroupeModel.studyActeAmount = row.EXACTEQUANTITE;
+                    siteGroupeModel.studyActeAmount = row.EXACTEMT;
                     siteGroupeModel.studyActeAmountDepassement = row.EXACTEMTDEP;
                     siteGroupeModel.studyActeAssociationNonPrevu = row.EXACTEANPREVUE;
                     siteGroupeModel.studyActeQuantity = row.EXACTEQUANTITE;
                     siteGroupeModel.studyActeAdditionalAmount = row.EXACTEMTDEP;
                     siteGroupeModel.studyActeCoefficient = row.EX_ACTE_COEFF;
                     siteGroupeModel.studyActeMigrationId = row.EXACTEID;
-
+                    siteGroupeModel.studyActeModificators = row.EXACTEMODIFICATEUR;
+                    siteGroupeModel.studyActeDepense = row.EXACTEQUALIFDEP;
+                    siteGroupeModel.studyActeEntentePrealable = row.EXACTESOUMISEP;
+                    siteGroupeModel.studyActeExtensionDocumentaire = row.EX_ACTE_EXT_DOC;
+                    siteGroupeModel.studyActeRefundingCode = row.EXACTEREMBOURSEMENT;
+                    siteGroupeModel.studyActeAcceptedModificators = row.EXACTEMODIFISPOSSIBLE;
                     siteGroupeModel.active = true;
-
                     dataToCreate.push(siteGroupeModel);
                 });
                 return dbUtility.insertRecords(dataToCreate, "STUDY_ACTE", false)
@@ -262,13 +253,13 @@ let SynapseMigration = {
         let rowDossier;
         let patientModel = {};
         let filtersDossier = [];
-        filtersDossier.push({name: 'date_dossier', value1: startDate, value2: endDate, compare: 'between'});
-        filtersDossier.push({name: 'annule', value: '0', compare: 'eq'});
-        let rows = await dbUtilitySynapse.read({limit: 'no', filters: filtersDossier}, 'DOSSIER', '');
+        filtersDossier.push({name: 'CONSULTDATE', value1: startDate, value2: endDate, compare: 'between'});
+        filtersDossier.push({name: 'DELETED', value: '0', compare: 'eq'});
+        let rows = await dbUtilitySynapse.read({limit: 'no', filters: filtersDossier}, 'consult', '');
         for (let i = 0; i < rows.length; i++) {
             let rowDossier = rows[i];
 
-            let filters = [{name: 'patientMigrationId', value: "" + rowDossier.id_identite + ""}];
+            let filters = [{name: 'patientMigrationId', value: "" + rowDossier.PATIENTID + ""}];
 
             let _patientResultsArray = await dbUtility.read({
                 limit: 1,
@@ -279,33 +270,46 @@ let SynapseMigration = {
             if (_patientResultsArray && _patientResultsArray.length) {
                 let patientObj = _patientResultsArray[0];
                 patientModel.visitId = uuid.v4();
-                patientModel.siteId = rowDossier.id_cabinet;
+                if (rowDossier.SITEID == 2 || rowDossier.SITEID == 3) {
+                    patientModel.siteId = 2;
+                }
+                if (rowDossier.SITEID == 4) {
+                    patientModel.siteId = 1;
+                }
                 patientModel.patientId = patientObj.patientId;
-                patientModel.remplacantId = rowDossier.id_remplacant;
+                patientModel.remplacantId = rowDossier.CONSULTREMPLACANTID;
                 patientModel.establishmentId = null;
                 patientModel.visitInvoiceType = 2;
-                patientModel.doctorId = rowDossier.id_ps;
+                patientModel.doctorId = rowDossier.USERID;
+                //   patientModel.doctorId = rowDossier.USERID;
 
-                patientModel.visitDate = moment(new Date(rowDossier.date_dossier)).format('Y-M-D');
-                patientModel.visitTime = moment(new Date(rowDossier.date_dossier)).format('HH:mm:ss');
+                patientModel.visitDate = moment(new Date(rowDossier.CONSULTDATE)).format('Y-M-D');
+                patientModel.visitTime = rowDossier.CONSULTHEURE;
+
+                // patientModel.visitTime = moment(new Date(rowDossier.date_dossier)).format('HH:mm:ss');
 
                 patientModel.visitIsBySocialCard = true;
 
 
-                patientModel.visitIsHospitalized = false;
-                patientModel.visitIsUrgent = false;
+                patientModel.visitIsHospitalized = rowDossier.CONSULTESTHOSPITALISATION;
+                patientModel.visitIsUrgent = rowDossier.CONSULTESTURGENCE;
                 patientModel.visitHospitVisitNumber = 0;
-                patientModel.visitIsDone = true;
+                patientModel.visitIsDone = rowDossier.CONSULTTERMINEE;
 
-                patientModel.visitMigrationId = rowDossier.id_dossier;
-                patientModel.visitPacsId = rowDossier.id_dossier;
+                patientModel.visitMigrationId = rowDossier.CONSULTID;
+                patientModel.visitPacsId = rowDossier.CONSULTPACSID;
                 // patientModel.groupVacId=rowDossier.id_groupe_vacation;
                 patientModel.visitCotationStatus = 3;
                 // patientModel.visitMigrationField1=rowDossier.idCorrespondantMT;
                 //  patientModel.visitMigrationField2=rowDossier.idCorrespondant2;
-                patientModel.visitIsAmo = false;
-                patientModel.visitIsAmo = true;
-                patientModel.visitIsAmc = false;
+                patientModel.visitIsAmo = rowDossier.CONSULTTPAMO;
+                //  patientModel.visitIsAmo = true;
+                patientModel.visitIsAmc = rowDossier.CONSULTTPAMC;
+
+
+                patientModel.visitTaille = rowDossier.CONSULT_PATIENT_TAILLE;
+                //  patientModel.visitIsAmo = true;
+                patientModel.visitPoids = rowDossier.CONSULT_PATIENT_POIDS;
 
                 patientModel.active = true;
                 dataToCreate.push(patientModel);
@@ -318,22 +322,61 @@ let SynapseMigration = {
                 worklistObj.patientId = patientModel.patientId;
                 worklistObj.siteId = patientModel.siteId;
                 worklistObj.worklistStudies = "";
-                let rowsDossierAffichage = await dbUtilitySynapse.read({
-                    limit: 'no',
-                    filters: [{name: 'id_dossier', value: rowDossier.id_dossier}]
-                }, 'dossier_affichage', '');
-                if (rowsDossierAffichage.length) {
-                    worklistObj.worklistStudies = rowsDossierAffichage[0].examen;
-                }
-                worklistObj.worklistDoctor = "";
-                if (rowDossier.id_ps) {
-                    let rowsPs = await dbUtilitySynapse.read({
-                        limit: 'no',
-                        filters: [{name: 'id_ps', value: rowDossier.id_ps}]
-                    }, 'ps', '');
-                    if (rowsPs.length) {
-                        worklistObj.worklistDoctor = rowsPs[0].nom + " " + rowsPs[0].prenom;
+                /* let rowsDossierAffichage = await dbUtilitySynapse.read({
+                     limit: 'no',
+                     filters: [{name: 'CONSULTID', value: rowDossier.CONSULTID}]
+                 }, 'consults_exs', '');
+                 if (rowsDossierAffichage.length) {
+                     worklistObj.worklistStudies = rowsDossierAffichage[0].examen;
+                 }*/
+
+
+                let filtersExamen = [{name: 'CONSULTID', value: rowDossier.CONSULTID, compare: 'eq'}, {
+                    name: 'DELETED',
+                    value: 0
+                }];
+
+                let mainTableObject = {tableName: 'consults_exs', filters: filtersExamen};
+                let joinTablesArray = [];
+                joinTablesArray.push({tableName: 'examen', fieldsArray: ['EXAMENABREV', 'EXAMENDESIGNATION']});
+
+                let _rowsExamen = await dbUtilitySynapse.joinQuery(mainTableObject, joinTablesArray, 'no');
+                if (_rowsExamen) {
+                    if (_rowsExamen && _rowsExamen.length) {
+                        let examenCode = "";
+                        let i = 0;
+                        _rowsExamen.forEach(_rowExamen => {
+                            i++;
+                            examenCode += _rowExamen['Examen.EXAMENABREV'];
+                            if (i < _rowsExamen.length)
+                                examenCode += "|";
+                        });
+
+
+                        worklistObj.worklistStudies = examenCode;
+
                     }
+                }
+
+
+                worklistObj.worklistDoctor = "";
+                if (rowDossier.USERID == '2035') {
+                    worklistObj.worklistDoctor = "AOUAIFIA Abdelhamid";
+
+                    /*
+                                        let rowsPs = await dbUtilitySynapse.read({
+                                            limit: 'no',
+                                            filters: [{name: 'USERID', value: rowDossier.USERID}]
+                                        }, 'ps', '');
+                                        if (rowsPs.length) {
+                                            worklistObj.worklistDoctor = rowsPs[0].nom + " " + rowsPs[0].prenom;
+                                        }*/
+                }
+                if (rowDossier.USERID == '2016') {
+                    worklistObj.worklistDoctor = "JANANI Morgane";
+                }
+                if (rowDossier.USERID == '2046') {
+                    worklistObj.worklistDoctor = "ROY NINA";
                 }
                 worklistObj.worklistLastCrStatus = 3;
 
@@ -356,59 +399,6 @@ let SynapseMigration = {
         }
     },
 
-
-    migrateExamen: async function (mind, maxd, offset, startDate, endDate) {
-        let dataToCreate = [];
-        let visitId;
-        let filtersDossier = [];
-        filtersDossier.push({name: 'visitDate', value1: startDate, value2: endDate, compare: 'between'});
-        let _visitRowsArray = await dbUtility.read({
-            limit: 1,
-            offset: offset,
-            fieldsArray: ['visitMigrationId', 'visitId'],
-            filters: filtersDossier
-        }, 'VISIT')
-        if (_visitRowsArray.length) {
-            let visitMigrationId = _visitRowsArray[0].visitMigrationId;
-            visitId = _visitRowsArray[0].visitId;
-            //   console.log(visitMigrationId)
-            if (visitMigrationId) {
-                let filtersExamen = [{name: 'idDossier', value: parseInt(visitMigrationId)}, {name: 'DEL', value: 0}];
-
-                let mainTableObject = {tableName: 'dossier_examen', filters: filtersExamen};
-                let joinTablesArray = [];
-                joinTablesArray.push({tableName: 'examen', fieldsArray: ['codeExamen', 'designationExamen']});
-
-                let _rowsExamen = await dbUtilitySynapse.joinQuery(mainTableObject, joinTablesArray, 'no');
-                if (_rowsExamen) {
-                    if (_rowsExamen && _rowsExamen.length) {
-                        let examenCode = "";
-                        let i = 0;
-                        _rowsExamen.forEach(_rowExamen => {
-                            i++;
-                            examenCode += _rowExamen['Examen.codeExamen'];
-                            if (i < _rowsExamen.length)
-                                examenCode += "|";
-                        });
-                        let worklistParam = {};
-                        worklistParam.idName = 'visitId';
-                        worklistParam.idValue = visitId;
-                        worklistParam.worklistStudies = examenCode;
-                        let saveWorklist = await dbUtility.saveRecord(worklistParam, 'WORKLIST');
-                        let reportParam = {};
-                        reportParam.idName = 'visitId';
-                        reportParam.idValue = visitId;
-                        reportParam.reportName = examenCode;
-                        let saveReport = await dbUtility.saveRecord(reportParam, 'REPORT');
-                        return saveWorklist;
-                    } else return false;
-                } else return false;
-            }
-
-        } else return false;
-
-
-    },
     migrateExamens: async function (mind, maxd, startDate, endDate) {
 
         for (let i = mind; i < maxd; i++) {
@@ -430,38 +420,48 @@ let SynapseMigration = {
             limit: 'no',
             fieldsArray: ['visitMigrationId', 'visitId', 'doctorId'], filters: filtersDossier
         }, 'VISIT');
-        /*if(_visitRowsArray.length)
-        {*/
         for (let i = 0; i < _visitRowsArray.length; i++) {
 
-
-            visitMigrationId = _visitRowsArray[i].visitMigrationId;
             visitId = _visitRowsArray[i].visitId;
-            let filtersExamen = [{name: 'id_dossier', value: visitMigrationId, compare: 'eq'}, {
-                name: 'annule',
+            visitMigrationId = _visitRowsArray[i].visitMigrationId;
+
+            let filtersWorklist = [];
+            filtersWorklist.push({name: 'visitId', value: visitId, compare: 'eq'});
+
+            let worklistRowsArray = await dbUtility.read({
+                fieldsArray: ['worklistStudies'], filters: filtersWorklist
+            }, 'worklist');
+
+
+            let filtersExamen = [{name: 'CONSULTID', value: visitMigrationId, compare: 'eq'}, {
+                name: 'DELETED',
                 value: 0,
                 compare: 'eq'
             }];
 
-            let _rowsExamen = await dbUtilitySynapse.read({filters: filtersExamen}, 'compte_rendu', '');
+            let _rowsExamen = await dbUtilitySynapse.read({filters: filtersExamen}, 'crs', '');
 
-            if (_rowsExamen && _rowsExamen.length) {
+            if (worklistRowsArray && worklistRowsArray.length) {
                 let dataToInsertArray = [];
                 _rowsExamen.forEach(function (_rowCr) {
                     let reportObj = {};
                     reportObj.reportId = uuid.v4();
-                    reportObj.visitMigrationId = _rowCr.id_dossier;
-                    reportObj.reportMigrationId = _rowCr.id_compte_rendu;
+                    reportObj.visitMigrationId = _rowCr.CONSULTID;
+                    reportObj.reportMigrationId = _rowCr.CRID;
                     reportObj.studyId = 0;
                     reportObj.doctorId = _visitRowsArray[i].doctorId;
                     reportObj.visitId = visitId;
-                    reportObj.reportName = _rowCr.titre;
-                    reportObj.docName = _rowCr.id_compte_rendu + '.htm';
-                    reportObj.reportPath = "migrated/" + _rowCr.lien + "/" + reportObj.docName;
+                    if (worklistRowsArray && worklistRowsArray.length) {
+                        reportObj.reportName = worklistRowsArray[0].worklistStudies;
+                    } else {
+                        reportObj.reportName = _rowCr.CRLIBELLE + '.html';
+                    }
+
+                    reportObj.docName = _rowCr.CRLIBELLE + '.html';
+                    reportObj.reportPath = "migrated/" + (_rowCr.CRPATH).replace("docx", "html");
                     reportObj.reportHtmlPath = reportObj.reportPath;
-                    reportObj.reportContentIsHtml = false;
-                    //  _item.reportDate = moment(_item.reportDate).format('Y-MM-DD');
-                    reportObj.reportDate = _rowCr.dateheure;
+                    reportObj.reportContentIsHtml = true;
+                    reportObj.reportDate = moment(_rowCr.CRDATETIME).format('Y-MM-DD HH:mm:ss');
                     reportObj.reportStatus = 3; // valide
                     reportObj.active = true;
                     dataToInsertArray.push(reportObj);
@@ -535,25 +535,33 @@ ALTER TABLE `patients` ADD `createdAt` INT NULL DEFAULT NULL AFTER `DELETED`, AD
 ALTER TABLE `prescripteurs` ADD `createdAt` INT NULL DEFAULT NULL AFTER `DELETED`, ADD `updatedAt` INT NULL DEFAULT NULL AFTER `createdAt`;
  ALTER TABLE `examens` ADD `createdAt` INT NULL DEFAULT NULL AFTER `DELETED`, ADD `updatedAt` INT NULL DEFAULT NULL AFTER `createdAt`;
  ALTER TABLE `exs_actes` ADD `createdAt` INT NULL DEFAULT NULL AFTER `DELETED`, ADD `updatedAt` INT NULL DEFAULT NULL AFTER `createdAt`;
+ALTER TABLE `consults` ADD `createdAt` INT NULL DEFAULT NULL AFTER `DELETED`, ADD `updatedAt` INT NULL DEFAULT NULL AFTER `createdAt`;
+ ALTER TABLE `consults_exs` ADD `createdAt` INT NULL DEFAULT NULL AFTER `DELETED`, ADD `updatedAt` INT NULL DEFAULT NULL AFTER `createdAt`;
+  ALTER TABLE `crs` ADD `createdAt` INT NULL DEFAULT NULL AFTER `DELETED`, ADD `updatedAt` INT NULL DEFAULT NULL AFTER `createdAt`;
 ALTER TABLE `communes` ADD `createdAt` INT NULL DEFAULT NULL AFTER `DELETED`, ADD `updatedAt` INT NULL DEFAULT NULL AFTER `createdAt`;
 
  */
 
-//MedRisMigration.migratePatient(50000,55000);
-
-
-//ErisMigration.migratePS();
-//ErisMigration.migrateStudiesActe();
 //SynapseMigration.migratePrescripteurs();
-//SynapseMigration.migrateUnCorrespondant();
-//SynapseMigration.migratePatient(100,1);
-
-//ErisMigration.migrateUserAndDoctor();
-//ErisMigration.migrateOrgEtbac();
+//SynapseMigration.migratePatient(1500000,1);
 //SynapseMigration.migrateStudies();
 //SynapseMigration.migrateStudiesActe();
+//SynapseMigration.migrateDossier('2015-01-01','2015-12-31',true);
+//SynapseMigration.migrateCr('2015-01-01','2015-12-31');
 
-//ErisMigration.migrateDossier('2021-01-01','2021-06-10',true);
 
-//ErisMigration.migrateCr('2021-01-01','2021-06-10');
+/*
+DELETE FROM public.referring_physician;
+DELETE FROM public.patient;
+DELETE FROM public.STUDY;
+DELETE FROM public.STUDY_ACTE;
+DELETE FROM public.visit;
+DELETE FROM public.report;
+
+
+
+
+
+*/
+
 
