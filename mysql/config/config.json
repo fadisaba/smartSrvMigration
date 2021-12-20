@@ -2,7 +2,15 @@
   "development": {
     "username": "postgres",
     "password": "ims062018",
-    "database": "etampes",
+    "database": "imma",
+    "host": "localhost",
+    "port":5432,
+    "dialect": "postgres"
+  },
+  "cabrad": {
+    "username": "postgres",
+    "password": "ims062018",
+    "database": "sucy_cabrad",
     "host": "localhost",
     "port":5432,
     "dialect": "postgres"
