@@ -37,7 +37,9 @@ let CabradMigration = {
         let userModel={};
         userModel.referringPhysicianId=uuid.v4();
         userModel.referringPhysicianMigrationId=CabradMigration.migrationIdPrefix+''+row.oid;
-        userModel.referringPhysicianFName=row.prenom;
+        userModel.referringPhysicianFName="";
+        if(row.prenom)
+            userModel.referringPhysicianFName=(row.prenom).trim();
         if( userModel.referringPhysicianFName)
         {
             userModel.referringPhysicianFName=(userModel.referringPhysicianFName).replace('?Ü',"é");
@@ -46,21 +48,37 @@ let CabradMigration = {
             userModel.referringPhysicianFName=(userModel.referringPhysicianFName).replace('ã©',"é");
 
         }
-        userModel.referringPhysicianLName=row.nom;
+        userModel.referringPhysicianLName="";
+
+        if(row.nom)
+            userModel.referringPhysicianLName=(row.nom).trim();
         userModel.referringPhysicianSearch=userModel.referringPhysicianLName +" "+userModel.referringPhysicianFName;
 
-        userModel.referringPhysicianPhoneNumber=row.teleph;
-        userModel.referringPhysicianEmail=row.email;
-        userModel.referringPhysicianAddress=row.adres1;
+        if(row.teleph)
+            userModel.referringPhysicianPhoneNumber=(row.teleph).trim();
+        else
+            userModel.referringPhysicianPhoneNumber="";
+
+        userModel.referringPhysicianEmail=(row.email).trim();
+        userModel.referringPhysicianAddress=(row.adres1).trim();
         if(row.burdis)
-            userModel.referringPhysicianAddress+="\n"+row.codpos+" "+row.burdis;
-        userModel.referringPhysicianZipCode=row.code_postal;
+            userModel.referringPhysicianAddress+="\n"+(row.codpos).trim()+" "+(row.burdis).trim();
+
+        if(row.code_postal)
+            userModel.referringPhysicianZipCode=(row.code_postal).trim();
+        else
+            userModel.referringPhysicianZipCode="";
+
 
         userModel.referringPhysicianGender=0;
 
         userModel.referringPhysicianTitle = 0;
         userModel.cityId = 0;
-        userModel.referringPhysicianSpeciality=row.specia;
+        if(row.specia)
+            userModel.referringPhysicianSpeciality=(row.specia).trim();
+        else
+            userModel.referringPhysicianSpeciality="";
+
         userModel.active=true;
         if(userModel.referringPhysicianFName && userModel.referringPhysicianLName)
             await dbUtility.insertRecords([userModel],"referring_physician",false);
@@ -91,13 +109,22 @@ let CabradMigration = {
         patientModel.patientId=uuid.v4();
         patientModel.cityId=0;
         patientModel.patientPhoneNumber="";
-        patientModel.patientMobileNumber=row.commen;
-        patientModel.patientAddress=row.adres1;
+        if(row.commen)
+            patientModel.patientMobileNumber=(row.commen).trim();
+        patientModel.patientMobileNumber="";
+
+        if(row.adres1)
+         patientModel.patientAddress=(row.adres1).trim();
+        else
+            patientModel.patientAddress="";
         if(row.adres2)
-            patientModel.patientAddress+= "\n "+row.adres2;
-        patientModel.patientZipCode=row.codpos;
+            patientModel.patientAddress+= "\n "+(row.adres2).trim();
+        if(row.codpos)
+         patientModel.patientZipCode=(row.codpos).trim();
+        else
+            patientModel.patientZipCode="" ;
         if(row.burdis)
-            patientModel.patientAddress+="\n"+row.codpos+" "+row.burdis;
+            patientModel.patientAddress+="\n"+(row.codpos).trim()+" "+(row.burdis).trim();
         patientModel.patientEmail="";
 
 
@@ -118,9 +145,20 @@ let CabradMigration = {
 
         //patientModel.referringPhysicianId=1;
         patientModel.patientMigrationId=CabradMigration.migrationIdPrefix+row.codpat;
-        patientModel.patientFname=row.prenom;
-        patientModel.patientLName=row.nom;
-        patientModel.patientSecondName=row.nomjfi;
+        if(row.prenom)
+            patientModel.patientFname=(row.prenom).trim();
+        else
+            patientModel.patientFname="";
+        if(row.nom)
+            patientModel.patientLName=(row.nom).trim();
+        else
+            patientModel.patientLName="";
+
+        if(row.nomjfi)
+        patientModel.patientSecondName=(row.nomjfi).trim();
+        else
+            patientModel.patientSecondName="";
+
         patientModel.patientPacsId=CabradMigration.migrationIdPrefix+row.codpat;
         patientModel.patientSearch=patientModel.patientLName+" "+patientModel.patientFname;
 
@@ -156,8 +194,13 @@ let CabradMigration = {
         else
             patientModel.patientBirthday='1900-01-01';
 
-        patientModel.patientSocialNumber=row.numsec;
-        patientModel.patientSocialKey=row.clesec;
+        if(row.numsec)
+        patientModel.patientSocialNumber=(row.numsec).trim();
+        else patientModel.patientSocialNumber="";
+        if(row.clesec)
+        patientModel.patientSocialKey=(row.clesec).trim();
+        else
+            patientModel.patientSocialKey="";
         patientModel.active=true;
         if(patientModel.patientFname && patientModel.patientFname)
             await dbUtility.insertRecords([patientModel],"PATIENT",false)
@@ -370,19 +413,10 @@ ALTER TABLE public.fradio
 ADD COLUMN "updatedAt" integer;
 */
 
-//ErisMigration.migratePS();
-//ErisMigration.migrateStudiesActe();
-//ErisMigration.migrateCorrespondant();
-//ErisMigration.migratePatient(49999,1);
-
-//ErisMigration.migrateUserAndDoctor();
-//ErisMigration.migrateOrgEtbac();
-
-
-
-CabradMigration.migrateDossier('2016-02-24','2016-02-24',true);
-
-//ErisMigration.migrateCr('2021-01-01','2021-06-10');
-
 //CabradMigration.migratePrescripteurs();
-//CabradMigration.migratePatient(49999,1);
+//CabradMigration.migratePatient(120000,0);
+//CabradMigration.migrateDossier('2017-01-01','2017-12-31',false);
+
+
+
+
