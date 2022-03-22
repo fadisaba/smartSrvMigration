@@ -6,8 +6,8 @@ let dbUtility=require('../common/DbUtility');
 let moment = require('../node_modules/moment');
 let uuid = require('node-uuid');
 let CabradMigration = {
-    migrationIdPrefix:"s.",
-    siteId:6,
+    migrationIdPrefix:"",
+    siteId:1,
   /*  setDoctorModel:function(_rowUserPs,_rowUser)
     {
         let doctorModel={};
@@ -123,7 +123,7 @@ let CabradMigration = {
          patientModel.patientZipCode=(row.codpos).trim();
         else
             patientModel.patientZipCode="" ;
-        if(row.burdis)
+        if(row.burdis && row.codpos)
             patientModel.patientAddress+="\n"+(row.codpos).trim()+" "+(row.burdis).trim();
         patientModel.patientEmail="";
 
@@ -249,7 +249,7 @@ let CabradMigration = {
 
                 patientModel.establishmentId = null;
                 patientModel.visitInvoiceType = 2;
-                patientModel.doctorId = 2;
+                patientModel.doctorId = 2035;
                 patientModel.visitDate = moment(new Date(rowDossier.datexa)).format('Y-M-D');
                 // calcul de l'heure cleass ex 911 to 09:11:00
                 let timeLenght = (rowDossier.cleass).length;
@@ -414,8 +414,8 @@ ADD COLUMN "updatedAt" integer;
 */
 
 //CabradMigration.migratePrescripteurs();
-//CabradMigration.migratePatient(120000,0);
-//CabradMigration.migrateDossier('2017-01-01','2017-12-31',false);
+//CabradMigration.migratePatient(80000,0);
+CabradMigration.migrateDossier('2017-01-01','2017-12-31',false);
 
 
 
