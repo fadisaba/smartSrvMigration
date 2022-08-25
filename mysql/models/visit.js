@@ -158,6 +158,10 @@ module.exports = function (sequelize, DataTypes) {
                 type: DataTypes.DATE,
                 allowNull: true
             },
+            visitCotationFirstValidationDateTime: {
+                type: DataTypes.DATE,
+                allowNull: true
+            },
             visitIppPatient: {
                 type: DataTypes.STRING,
                 allowNull: true
@@ -249,6 +253,11 @@ module.exports = function (sequelize, DataTypes) {
                 allowNull: true,
                 defaultValue: 0
             },
+            groupVacId: {
+                type: DataTypes.INTEGER,
+                allowNull: true,
+                defaultValue: 0
+            },
             visitIsDuplicated: {
                 type: DataTypes.BOOLEAN,
                 allowNull: true,
@@ -288,10 +297,10 @@ module.exports = function (sequelize, DataTypes) {
                 allowNull: true,
                 defaultValue: false
             },
-            visitIsBorne: {
-                type: DataTypes.BOOLEAN,
+            visitByBorne: { // valeurs possibles => 0 pas de borne, 1 accueilli par la borne puis la secrétaire, 2 accueil par la borne mais pas encore par la secrétaire
+                type: DataTypes.INTEGER,
                 allowNull: true,
-                defaultValue: false
+                defaultValue: 0
             },
             visitFtCodeRegime: {
                 type: DataTypes.STRING,
@@ -334,6 +343,11 @@ module.exports = function (sequelize, DataTypes) {
                 allowNull: true,
                 defaultValue: false
             },
+            visitIsFtNas: {
+                type: DataTypes.BOOLEAN,
+                allowNull: true,
+                defaultValue: false
+            },
             visitIsCancelled: {
                 type: DataTypes.BOOLEAN,
                 allowNull: true,
@@ -349,6 +363,44 @@ module.exports = function (sequelize, DataTypes) {
                 allowNull: true,
                 defaultValue: false
             },
+            visitSansDepassement: {
+                type: DataTypes.BOOLEAN,
+                allowNull: true,
+                defaultValue: false
+            },
+            visitIsAldFt: {
+                type: DataTypes.BOOLEAN,
+                allowNull: true,
+                defaultValue: false
+            },
+            visitIsNonExoFt: {
+                type: DataTypes.BOOLEAN,
+                allowNull: true,
+                defaultValue: false
+            },
+            visitIsForcerAnp: {
+                type: DataTypes.BOOLEAN,
+                allowNull: true,
+                defaultValue: false
+            },
+            visitIsReadyForDiffusion: {
+                type: DataTypes.BOOLEAN,
+                allowNull: true,
+                defaultValue: false
+            },
+            visitSortiePatientDateTime: {
+                type: DataTypes.DATE,
+                allowNull: true
+            },
+            visitRatingDate: {
+                type: DataTypes.DATE,
+                allowNull: true
+            },
+            visitRatingCode: {
+                type: DataTypes.UUID,
+                allowNull: true
+            },
+
             active: {
                 type: DataTypes.BOOLEAN,
                 allowNull: true,

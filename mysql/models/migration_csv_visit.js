@@ -31,6 +31,10 @@ module.exports = function (sequelize, DataTypes) {
                 type: DataTypes.STRING,
                 allowNull: false
             },
+            migrationCsvVisitDoctor: {
+                type: DataTypes.STRING,
+                allowNull: false
+            },
             migrationCsvVisitMtId: {
                 type: DataTypes.STRING,
                 allowNull: false

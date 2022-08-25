@@ -84,6 +84,11 @@ module.exports = function (sequelize, DataTypes) {
                 allowNull: true,
                 defaultValue:false
             },
+            rspFseIsIgnored: { // ignoré du rapporchement
+                type: DataTypes.BOOLEAN,
+                allowNull: true,
+                defaultValue:false
+            },
             active: {
                 type: DataTypes.BOOLEAN,
                 allowNull: true,

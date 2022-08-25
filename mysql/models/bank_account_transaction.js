@@ -31,7 +31,7 @@ module.exports = function(sequelize, DataTypes) {
               type: DataTypes.DATEONLY,
               allowNull: true
           },
-          bankAccountTransactionApplicationDate: {
+          bankAccountTransactionApplicationDate: {// la date des paiement qui apparait dans les RSP
               type: DataTypes.DATEONLY,
               allowNull: true
           },
@@ -45,6 +45,10 @@ module.exports = function(sequelize, DataTypes) {
           },
           bankAccountTransactionAmount: {
               type: DataTypes.DECIMAL(10, 2),
+              allowNull: true
+          },
+          bankAccountTransactionNumMedecin: {  // le numéro de facturation du médecin ou de l'etablissement pour les F.T
+              type: DataTypes.STRING,
               allowNull: true
           },
           bankAccountTransactionIsMatched: {

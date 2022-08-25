@@ -147,7 +147,10 @@ module.exports = function(sequelize, DataTypes) {
               type: DataTypes.TEXT,
               allowNull: true
           },
-
+          userCpsFseCounterValue: {
+              type: DataTypes.INTEGER,
+              allowNull: false
+          },
       active: {
           type: DataTypes.BOOLEAN,
           allowNull: true,

@@ -49,6 +49,11 @@ module.exports = function (sequelize, DataTypes) {
                 allowNull: true,
                 defaultValue:false
             },
+            rspIsMatchedManually: {
+                type: DataTypes.BOOLEAN,
+                allowNull: true,
+                defaultValue:false
+            },
             rspIsExported: {
                 type: DataTypes.BOOLEAN,
                 allowNull: true,

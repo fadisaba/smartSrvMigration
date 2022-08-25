@@ -59,6 +59,16 @@ module.exports = function(sequelize, DataTypes) {
               allowNull: true,
               defaultValue: '0.00'
           },
+          studyActeAdditionalSecteur1Amount: {
+              type: DataTypes.DECIMAL(10, 2),
+              allowNull: true,
+              defaultValue: '0.00'
+          },
+          studyActeAdditionalSecteur2Amount: {
+              type: DataTypes.DECIMAL(10, 2),
+              allowNull: true,
+              defaultValue: '0.00'
+          },
         studyActeAcceptedModificators: { // les modificateurs possibles pour l'acte
           type: DataTypes.STRING,
           allowNull: true

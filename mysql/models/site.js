@@ -63,6 +63,14 @@ module.exports = function(sequelize, DataTypes) {
               type: DataTypes.BOOLEAN,
               allowNull: true
           },
+          siteSiret: {
+              type: DataTypes.STRING,
+              allowNull: true
+          },
+          siteRatingLink: {
+              type: DataTypes.STRING,
+              allowNull: true
+          },
           siteMigrationId: {
               type: DataTypes.STRING,
               allowNull: true

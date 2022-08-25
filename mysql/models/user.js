@@ -75,8 +75,7 @@ module.exports = function(sequelize, DataTypes) {
           },
           userDescription: { // used for doctor
               type: DataTypes.TEXT,
-              allowNull: true,
-              defaultValue: false
+              allowNull: true
           },
         active: {
           type: DataTypes.BOOLEAN,

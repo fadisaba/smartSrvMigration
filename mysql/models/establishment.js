@@ -328,6 +328,11 @@ module.exports = function (sequelize, DataTypes) {
             type: DataTypes.STRING,
             allowNull: true
         },
+        establishmentCanBeWithAmo: { // on peut appliquer le tiers payant amo avec l'établissement
+            type: DataTypes.BOOLEAN,
+            allowNull: false,
+            defaultValue: false
+        },
             active: {
                 type: DataTypes.BOOLEAN,
                 allowNull: true,

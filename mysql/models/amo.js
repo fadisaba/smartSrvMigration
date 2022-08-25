@@ -14,6 +14,10 @@ module.exports = function (sequelize, DataTypes) {
                 type: DataTypes.STRING,
                 allowNull: true
             },
+            amoAdressePostaleDegrade: {// addresse postale utilisé pour l'envoi les pièces justificatif du flux dégradé
+                type: DataTypes.STRING,
+                allowNull: true
+            },
             amoCodeRegime: {
                 type: DataTypes.STRING,
                 allowNull: false

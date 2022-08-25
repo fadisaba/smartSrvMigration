@@ -43,7 +43,7 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: true,
       defaultValue: 0
     },
-    studyDosimetry: { //0 no DOSE 1 : RADIO 2 :SCANNER 3 : MAMMO
+    studyDosimetry: { // region anatomique de la dose
       type: DataTypes.INTEGER,
       allowNull: true,
       defaultValue: 0
@@ -103,6 +103,11 @@ module.exports = function(sequelize, DataTypes) {
               allowNull: true,
               defaultValue: false
           },
+          studyRequiredIndication: { // indication obligatoire pour le study lors de la cotation
+              type: DataTypes.BOOLEAN,
+              allowNull: true,
+              defaultValue: false
+          },
           studyIsSenolog: {
               type: DataTypes.BOOLEAN,
               allowNull: true,
@@ -117,6 +122,10 @@ module.exports = function(sequelize, DataTypes) {
               allowNull: true
           },
           studyChapitre: {
+              type: DataTypes.STRING,
+              allowNull: true
+          },
+          studyWorklistName: {
               type: DataTypes.STRING,
               allowNull: true
           },

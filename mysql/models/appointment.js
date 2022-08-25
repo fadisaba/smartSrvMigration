@@ -29,6 +29,11 @@ module.exports = function(sequelize, DataTypes) {
                 allowNull: true,
                 defaultValue: false
             },
+            appointmentIsConsult: {
+                type: DataTypes.BOOLEAN,
+                allowNull: true,
+                defaultValue: false
+            },
             appointmentMedIsRequired: {
                 type: DataTypes.BOOLEAN,
                 allowNull: true,
@@ -70,6 +75,12 @@ module.exports = function(sequelize, DataTypes) {
                 allowNull: true,
                 defaultValue: false
             },
+            appointmentIsReceivedByBorne: {
+                type: DataTypes.BOOLEAN,
+                allowNull: true,
+                defaultValue: false
+            },
+
             appointmentIsSurbooking: {
                 type: DataTypes.BOOLEAN,
                 allowNull: true,
@@ -79,6 +90,25 @@ module.exports = function(sequelize, DataTypes) {
                 type: DataTypes.STRING,
                 allowNull: true
             },
+            appointmentSmsCode: {
+                type: DataTypes.STRING,
+                allowNull: true
+            },
+            appointmentAnomalie: {
+                type: DataTypes.STRING,  // D : pour les rdv à deplacer, // M : anomalie medecin ne fait pas examen ou non présent
+                allowNull: true
+            },
+            appointmentCode: {
+                type: DataTypes.STRING,
+                allowNull: true
+            },
+
+            appointmentSmsSendingAttempt: {
+                type: DataTypes.INTEGER,
+                allowNull: true,
+                defaultValue: 0
+            },
+
             establishmentId: {
                 type: DataTypes.UUID,
                 allowNull: true

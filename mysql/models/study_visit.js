@@ -48,6 +48,14 @@ module.exports = function(sequelize, DataTypes) {
                 type: DataTypes.STRING,
                 allowNull: true
             },
+            studyVisitDose: { // la dose en mGy (ou dose sein gauche)
+                type: DataTypes.DECIMAL(10, 2),
+                allowNull: true
+            },
+            studyVisitDoseSeinDroit: { // la dose mGy sein droit en cas de Mammo
+                type: DataTypes.DECIMAL(10, 2),
+                allowNull: true
+            },
             studyVisitMigrationId: {
                 type: DataTypes.STRING,
                 allowNull: true

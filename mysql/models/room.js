@@ -36,7 +36,7 @@ module.exports = function(sequelize, DataTypes) {
               allowNull: true
           },
           roomPlMedecinOrdre: {
-              type: DataTypes.DECIMAL(10, 2),
+              type: DataTypes.INTEGER,
               allowNull: true,
               defaultValue:0
           },

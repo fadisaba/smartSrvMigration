@@ -1,5 +1,5 @@
 module.exports = function(sequelize, DataTypes) {
-    let UserHasLog= sequelize.define("UserHasLog", {
+    let UserHasLog1= sequelize.define("UserHasLog1", {
             userHasLogId:{
                 type: DataTypes.UUID,
                 allowNull: false,
@@ -10,10 +10,6 @@ module.exports = function(sequelize, DataTypes) {
                 allowNull: false
             },
             visitId: {
-                type: DataTypes.UUID,
-                allowNull: true
-            },
-            patientId: {
                 type: DataTypes.UUID,
                 allowNull: true
             },
@@ -44,16 +40,15 @@ module.exports = function(sequelize, DataTypes) {
             }
         },
         {
-            tableName: 'user_has_log',
+            tableName: 'user_has_log1',
             paranoid: true,
             classMethods: {
                 associate: function(models) {
-                    UserHasLog.hasMany(models.UserHasLogLabel,{foreignKey: 'userHasLogId'});
-                    UserHasLog.belongsTo(models.User,{foreignKey: 'userId'});
+                    UserHasLog1.hasMany(models.UserHasLogLabel1,{foreignKey: 'userHasLogId'});
                 }
             }
         }
     );
 
-    return UserHasLog;
+    return UserHasLog1;
 };

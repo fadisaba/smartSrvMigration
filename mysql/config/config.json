@@ -2,11 +2,12 @@
   "development": {
     "username": "postgres",
     "password": "ims062018",
-    "database": "messaoudi",
+    "database": "viry",
     "host": "localhost",
     "port":5432,
     "dialect": "postgres"
   },
+
   "cabrad": {
     "username": "postgres",
     "password": "ims062018",
@@ -18,7 +19,7 @@
   "migrate": {
     "username": "postgres",
     "password": "ims062018",
-    "database": "eris",
+    "database": "sav",
     "host": "localhost",
     "port":5432,
     "dialect": "postgres"

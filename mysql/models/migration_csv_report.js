@@ -19,6 +19,10 @@ module.exports = function (sequelize, DataTypes) {
                 type: DataTypes.STRING,
                 allowNull: false
             },
+            migrationCsvStudyName: {
+                type: DataTypes.STRING,
+                allowNull: false
+            },
             migrationCsvReportName: {
                 type: DataTypes.STRING,
                 allowNull: false

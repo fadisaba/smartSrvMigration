@@ -18,6 +18,10 @@ module.exports = function (sequelize, DataTypes) {
                 type: DataTypes.UUID,
                 allowNull: true
             },
+            bankAccountTransactionId: {
+                type: DataTypes.STRING,
+                allowNull: true
+            },
             cashBoxId: {
                 type: DataTypes.UUID,
                 allowNull: true,
@@ -53,7 +57,6 @@ module.exports = function (sequelize, DataTypes) {
                 type: DataTypes.INTEGER,
                 allowNull: false
             },
-
             paymentReceivedAmount: {
                 type: DataTypes.DECIMAL(10, 2),
                 allowNull: true,
@@ -74,9 +77,12 @@ module.exports = function (sequelize, DataTypes) {
                 allowNull: true,
                 defaultValue:false
             },
-
             paymentExportDate: { // export date,  when the  payment was exported to the accounting software, we can't do any change
                 type: DataTypes.DATEONLY,
+                allowNull: true
+            },
+            paymentExportBordNumber: { // numéro de borderau lors de l'export comptable
+                type: DataTypes.INTEGER,
                 allowNull: true
             },
             paymentComment: {
@@ -115,6 +121,7 @@ module.exports = function (sequelize, DataTypes) {
                 allowNull: true,
                 defaultValue:false
             },
+
             active: {
                 type: DataTypes.BOOLEAN,
                 allowNull: true,

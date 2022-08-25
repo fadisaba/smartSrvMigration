@@ -1,5 +1,5 @@
 module.exports = function(sequelize, DataTypes) {
-    let UserHasLogLabel= sequelize.define("UserHasLogLabel", {
+    let UserHasLogLabel1= sequelize.define("UserHasLogLabel1", {
             userHasLogLabelId:{
                 type: DataTypes.UUID,
                 allowNull: false,
@@ -10,7 +10,7 @@ module.exports = function(sequelize, DataTypes) {
                 allowNull: false
             },
             userHasLogLabelText: {
-                type: DataTypes.TEXT,
+                type: DataTypes.STRING,
                 allowNull: false
             },
             active: {
@@ -20,14 +20,14 @@ module.exports = function(sequelize, DataTypes) {
             }
         },
         {
-            tableName: 'user_has_log_label',
+            tableName: 'user_has_log_label1',
             paranoid: true,
             classMethods: {
                 associate: function(models) {
-                    UserHasLogLabel.belongsTo(models.UserHasLog,{foreignKey: 'userHasLogId'});
+                    UserHasLogLabel1.belongsTo(models.UserHasLog1,{foreignKey: 'userHasLogId'});
                 }
             }
         }
     );
-    return UserHasLogLabel;
+    return UserHasLogLabel1;
 };

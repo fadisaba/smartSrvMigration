@@ -20,6 +20,11 @@ module.exports = function (sequelize, DataTypes) {
                 allowNull: true,
                 defaultValue:0
             },
+            paymentMethodNumeroCompteComptable: {
+                type: DataTypes.STRING,
+                allowNull: true,
+                defaultValue:0
+            },
             active: {
                 type: DataTypes.BOOLEAN,
                 allowNull: true,

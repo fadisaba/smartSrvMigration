@@ -156,6 +156,10 @@ module.exports = function(sequelize, DataTypes) {
                 type: DataTypes.DATEONLY,
                 allowNull: true
             },
+            studyVisitHasActeIsDepassementParActe: { // si true on appliquer le dépassement par acte et non pas pas seuil
+                type: DataTypes.BOOLEAN,
+                defaultValue: false
+            },
             active: {
                 type: DataTypes.BOOLEAN,
                 allowNull: true,

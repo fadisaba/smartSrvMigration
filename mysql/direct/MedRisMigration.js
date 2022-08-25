@@ -887,5 +887,5 @@ let MedRisMigration = {
 //
 //MedRisMigration.migrateDossiers(0,20000,'2015-01-01','2015-12-31');
 //MedRisMigration.migrateCrs(0, 20000,'2015-01-01','2015-12-31');
-MedRisMigration.migrateExamens(0,20000,'2015-01-01','2015-12-31');
+//MedRisMigration.migrateExamens(0,20000,'2015-01-01','2015-12-31');
 //MedRisMigration.deleteVisit();

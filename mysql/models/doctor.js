@@ -11,6 +11,11 @@ module.exports = function(sequelize, DataTypes) {
           type: DataTypes.INTEGER,
           allowNull: false
         },
+          groupVacId: {
+              type: DataTypes.INTEGER,
+              allowNull: true,
+              defaultValue: 0
+          },
         doctorIsSubstitute: {
               type: DataTypes.BOOLEAN,
               allowNull: true,
@@ -55,6 +60,11 @@ module.exports = function(sequelize, DataTypes) {
           doctorSignature: {
               type: DataTypes.STRING,
               allowNull: true
+          },
+          doctorTotalAvecDepassement: {
+              type:DataTypes.DECIMAL(10, 2),
+              allowNull: true,
+              defaultValue: 0
           },
         active: {
           type: DataTypes.BOOLEAN,

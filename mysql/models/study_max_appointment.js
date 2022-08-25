@@ -1,27 +1,31 @@
 "use strict";
 module.exports = function(sequelize, DataTypes) {
-  let SchedulerPostit = sequelize.define("SchedulerPostit", {
-          schedulerPostitId: {
+  let StudyMaxAppointment = sequelize.define("StudyMaxAppointment", {
+          studyMaxAppointmentId: {
               type: DataTypes.UUID,
               allowNull: false,
               primaryKey: true
         },
-          groupRoomId: {
+          userId: {
               type: DataTypes.INTEGER,
               allowNull: false
           },
-          roomId: {
+          studyId: {
               type: DataTypes.INTEGER,
-              allowNull: true,
-              defaultValue: 0
+              allowNull: false
           },
-          schedulerPostitDate: {
+          studyMaxAppointmentDate: {
               type: DataTypes.DATEONLY,
               allowNull: false
           },
-          schedulerPostitText: {
-              type: DataTypes.TEXT,
+          studyMaxAppointmentNumber: {
+              type: DataTypes.INTEGER,
               allowNull: false
+          },
+          studyMaxAppointmentEveryDay: { // si true le max est valable tous le temp indépendemment de schedulerMaxStudyDate
+              type: DataTypes.BOOLEAN,
+              allowNull: true,
+              defaultValue: false
           },
         active: {
           type: DataTypes.BOOLEAN,
@@ -30,14 +34,13 @@ module.exports = function(sequelize, DataTypes) {
         }
       },
       {
-        tableName: 'scheduler_postit',
+        tableName: 'study_max_appointment',
         paranoid: true,
         classMethods: {
           associate: function(models) {
-              SchedulerPostit.belongsTo(models.GroupRoom,{foreignKey: 'groupRoomId'});
           }
         }
       }
   );
-  return SchedulerPostit;
+  return StudyMaxAppointment;
 };
